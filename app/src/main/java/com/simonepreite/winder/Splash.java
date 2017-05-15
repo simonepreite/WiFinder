@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.net.wifi.WifiManager;
 import android.content.Context;
 import android.net.wifi.ScanResult;
+import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.List;
@@ -30,16 +31,15 @@ public class Splash extends AppCompatActivity {
             @Override
             public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
-                sendWiFiData(wifiManager);
+                sendWiFiData();
             }
         }, SPLASH_DISPLAY_LENGTH);
     }
 
-    public void sendWiFiData(WifiManager wifiManager) {
-        List<ScanResult> apList = wifiManager.getScanResults();
-
+    public void sendWiFiData() {
+        //List<ScanResult> apList = wifiManager.getScanResults();
         final Intent intent = new Intent(this, APList.class);
-        intent.putExtra("apList", (Serializable)apList);
+        //intent.putExtra("apList", (Serializable)apList);
 
         startActivity(intent);
         finish();
