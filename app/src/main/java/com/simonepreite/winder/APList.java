@@ -11,12 +11,16 @@ import android.support.design.widget.FloatingActionButton;
 import android.widget.Toast;
 import android.net.wifi.WifiManager;
 import android.net.wifi.ScanResult;
+import android.widget.AdapterView;
+import android.widget.Toast;
+import android.util.Log;
 
 import android.net.wifi.ScanResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.widget.Toast.*;
 import static com.simonepreite.winder.R.*;
 
 public class APList extends AppCompatActivity {
@@ -63,6 +67,16 @@ public class APList extends AppCompatActivity {
                 new ArrayAdapter<String>(this, layout.row, R.id.textViewList, apString);
         APShow.setAdapter(adapter);
         APShow.deferNotifyDataSetChanged();
+
+        APShow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final String titoloriga = (String) parent.getItemAtPosition(position);
+                Log.d("List", "Ho cliccato sull'elemento con titolo" + titoloriga);
+                Toast.makeText(getBaseContext(), "Ho cliccato sull'elemento con titolo" + titoloriga, Toast.LENGTH_LONG).show();
+            }
+        });
+
         Toast.makeText(this, "updated", Toast.LENGTH_SHORT).show();
     }
 }

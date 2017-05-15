@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="fabSyncColor">#3bfd00</color>
-    <color name="backgroundList">#efa5c7fc</color>
-    <color name="backgroundSplash">#efacb1bc</color>
+    <color name="fabSyncColor">#ff9d41</color>
+    <color name="backgroundList">#efc3d1e7</color>
+    <color name="backgroundSplash">#efc3d1e7</color>
 </resources>
