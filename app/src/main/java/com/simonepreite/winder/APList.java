@@ -25,13 +25,13 @@ import static com.simonepreite.winder.R.*;
 
 public class APList extends AppCompatActivity {
 
-    private FloatingActionButton fab;
+    //private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(layout.list_layout);
-        final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        setContentView(layout.activity_aplist);
+        /*final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         fab = (FloatingActionButton) findViewById(id.fabSync);
 
@@ -41,10 +41,10 @@ public class APList extends AppCompatActivity {
                 createList(wifiManager);
             }
         });
-        createList(wifiManager);
+        createList(wifiManager);*/
     }
 
-    public void createList(WifiManager wifiManager){
+    /*public void createList(WifiManager wifiManager){
         //final Intent splashIntent = getIntent();
 
         List<ScanResult> apList = wifiManager.getScanResults();
@@ -60,7 +60,7 @@ public class APList extends AppCompatActivity {
             Toast.makeText(this, ap, Toast.LENGTH_SHORT).show();
         }*/
 
-        final ListView APShow = (ListView)findViewById(id.listView);
+        /*final ListView APShow = (ListView)findViewById(id.listView);
         APShow.setAdapter(null);
         APShow.deferNotifyDataSetChanged();
         final ArrayAdapter<String> adapter =
@@ -78,5 +78,5 @@ public class APList extends AppCompatActivity {
         });
 
         Toast.makeText(this, "updated", Toast.LENGTH_SHORT).show();
-    }
+    }*/
 }

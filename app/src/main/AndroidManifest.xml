@@ -22,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".APList" />
+        <activity android:name=".APDetails"></activity>
     </application>
 
 </manifest>
