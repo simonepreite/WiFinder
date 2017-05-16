@@ -74,10 +74,11 @@ public class APlistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_aplist, container, false);
 
         final WifiManager wifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.fabSync);
+        fab = (FloatingActionButton) view.findViewById(R.id.fabSync);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +87,7 @@ public class APlistFragment extends Fragment {
             }
         });
         createList(wifiManager);
-        return inflater.inflate(R.layout.fragment_aplist, container, false);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -148,7 +149,7 @@ public class APlistFragment extends Fragment {
         APShow.setAdapter(null);
         APShow.deferNotifyDataSetChanged();
         final ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(getActivity().getBaseContext(), R.layout.row, R.id.textViewList, apString);
+                new ArrayAdapter<>(getActivity().getBaseContext(), R.layout.row, R.id.textViewList, apString);
         APShow.setAdapter(adapter);
         APShow.deferNotifyDataSetChanged();
 
@@ -156,8 +157,8 @@ public class APlistFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final String titoloriga = (String) parent.getItemAtPosition(position);
-                Log.d("List", "Ho cliccato sull'elemento con titolo" + titoloriga);
-                Toast.makeText(getActivity().getBaseContext(), "Ho cliccato sull'elemento con titolo" + titoloriga, Toast.LENGTH_LONG).show();
+                Log.d("List", "Ho cliccato sull'elemento con titolo " + titoloriga);
+                Toast.makeText(getActivity().getBaseContext(), "Ho cliccato sull'elemento con titolo " + titoloriga, Toast.LENGTH_LONG).show();
             }
         });
 

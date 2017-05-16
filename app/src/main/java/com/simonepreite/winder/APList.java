@@ -72,8 +72,8 @@ public class APList extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final String titoloriga = (String) parent.getItemAtPosition(position);
-                Log.d("List", "Ho cliccato sull'elemento con titolo" + titoloriga);
-                Toast.makeText(getBaseContext(), "Ho cliccato sull'elemento con titolo" + titoloriga, Toast.LENGTH_LONG).show();
+                Log.d("List", "Ho cliccato sull'elemento con titolo " + titoloriga);
+                Toast.makeText(getBaseContext(), "Ho cliccato sull'elemento con titolo " + titoloriga, Toast.LENGTH_LONG).show();
             }
         });
 

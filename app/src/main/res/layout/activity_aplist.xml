@@ -5,7 +5,7 @@
     android:orientation="horizontal" >
 
     <fragment
-        android:id="@+id/menuFragment"
+        android:id="@+id/listFragment"
         android:layout_width="150dip"
         android:layout_height="match_parent"
         class="com.simonepreite.winder.fragments.APlistFragment" >
