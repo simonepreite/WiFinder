@@ -2,6 +2,7 @@ package com.simonepreite.winder;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -23,14 +24,14 @@ import java.util.List;
 import static android.widget.Toast.*;
 import static com.simonepreite.winder.R.*;
 
-public class APList extends AppCompatActivity {
+public class APList extends FragmentActivity {
 
     //private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(layout.activity_aplist);
+        setContentView(R.layout.activity_aplist);
         /*final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         fab = (FloatingActionButton) findViewById(id.fabSync);

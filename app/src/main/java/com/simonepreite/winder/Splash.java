@@ -31,15 +31,13 @@ public class Splash extends AppCompatActivity {
             @Override
             public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
-                sendWiFiData();
+                startActivity();
             }
         }, SPLASH_DISPLAY_LENGTH);
     }
 
-    public void sendWiFiData() {
-        //List<ScanResult> apList = wifiManager.getScanResults();
+    public void startActivity() {
         final Intent intent = new Intent(this, APList.class);
-        //intent.putExtra("apList", (Serializable)apList);
 
         startActivity(intent);
         finish();
