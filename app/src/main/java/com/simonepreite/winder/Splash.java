@@ -7,11 +7,6 @@ import android.os.Handler;
 
 import android.net.wifi.WifiManager;
 import android.content.Context;
-import android.net.wifi.ScanResult;
-import android.widget.Toast;
-
-import java.io.Serializable;
-import java.util.List;
 
 public class Splash extends AppCompatActivity {
 
@@ -30,7 +25,6 @@ public class Splash extends AppCompatActivity {
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
-                /* Create an Intent that will start the Menu-Activity. */
                 startActivity();
             }
         }, SPLASH_DISPLAY_LENGTH);

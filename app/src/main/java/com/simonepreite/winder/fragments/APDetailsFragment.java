@@ -7,15 +7,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.simonepreite.winder.R;
 
 public class APDetailsFragment extends Fragment {
 
+    ViewGroup root;
     private OnFragmentInteractionListener mListener;
 
     public APDetailsFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -28,8 +29,9 @@ public class APDetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_apdetails, container, false);
+        root = (ViewGroup) inflater.inflate(R.layout.fragment_apdetails, null);
+        return root; //inflater.inflate(R.layout.fragment_apdetails, container, false);
+
     }
 
     public void onButtonPressed(Uri uri) {
@@ -52,5 +54,10 @@ public class APDetailsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    void setMessage(String msg){
+        TextView txt = (TextView)root.findViewById(R.id.detailsText);
+        txt.setText(msg);
     }
 }

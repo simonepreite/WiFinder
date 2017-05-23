@@ -7,7 +7,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.simonepreite.winder.fragments.APDetailsFragment;
+
+
 
 import com.simonepreite.winder.R;
 
@@ -28,19 +31,15 @@ public class APlistFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     public APlistFragment() {
-        // Required empty public constructor
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         final View v = inflater.inflate(R.layout.fragment_aplist, container, false);
-
         final WifiManager wifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-
         fab = (FloatingActionButton) v.findViewById(R.id.fabSync);
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,7 +59,6 @@ public class APlistFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
 
     @Override
@@ -75,9 +73,8 @@ public class APlistFragment extends Fragment {
     }
 
     public void createList(WifiManager wifiManager, View view){
-        //final Intent splashIntent = getIntent();
+
         List<ScanResult> apList = wifiManager.getScanResults();
-        //ArrayList<ScanResult> apList = (ArrayList<ScanResult>) splashIntent.getSerializableExtra("apList");
         final List<String> apString = new ArrayList<>();
         for (ScanResult ap : apList){
             if(ap.SSID != "")
@@ -85,11 +82,6 @@ public class APlistFragment extends Fragment {
                 //Toast.makeText(getActivity(), ap.SSID, Toast.LENGTH_SHORT).show();
         }
 
-        /*for (String ap : apString){
-            Toast.makeText(this, ap, Toast.LENGTH_SHORT).show();
-        }*/
-
-        //final ListView APShow = (ListView) getActivity().findViewById(R.id.listView);
         final ListView APShow = (ListView) view.findViewById(R.id.listView);
         final ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(getActivity(), R.layout.row, R.id.textViewList, apString);
@@ -101,16 +93,17 @@ public class APlistFragment extends Fragment {
         else{
             Toast.makeText(getActivity(), "APShow is null", Toast.LENGTH_SHORT).show();
         }
-        /*APShow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        APShow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final String titoloriga = (String) parent.getItemAtPosition(position);
-                Log.d("List", "Ho cliccato sull'elemento con titolo " + titoloriga);
-                Toast.makeText(getActivity().getBaseContext(), "Ho cliccato sull'elemento con titolo " + titoloriga, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Ho cliccato sull'elemento con titolo " + titoloriga, Toast.LENGTH_LONG).show();
+                APDetailsFragment Obj = (APDetailsFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.detailsFragment);
+                Obj.setMessage(titoloriga);
             }
         });
 
-        Toast.makeText(getActivity().getBaseContext(), "updated", Toast.LENGTH_SHORT).show();*/
     }
 
 

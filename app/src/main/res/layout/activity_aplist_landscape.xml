@@ -7,10 +7,18 @@
 
     <fragment
         android:id="@+id/listFragment"
-        android:layout_width="match_parent"
+        android:layout_width="250dip"
         android:layout_height="match_parent"
         class="com.simonepreite.winder.fragments.APlistFragment"
         tools:layout="@layout/fragment_aplist">
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        class="com.simonepreite.winder.fragments.APDetailsFragment"
+        tools:layout="@layout/fragment_apdetails">
     </fragment>
 
 </LinearLayout>
