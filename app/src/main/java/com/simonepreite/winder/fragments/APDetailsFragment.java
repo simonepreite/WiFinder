@@ -56,7 +56,7 @@ public class APDetailsFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    void setMessage(String msg){
+    public void setMessage(String msg){
         TextView txt = (TextView)root.findViewById(R.id.detailsText);
         txt.setText(msg);
     }

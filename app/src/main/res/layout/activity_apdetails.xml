@@ -6,4 +6,12 @@
     android:layout_height="match_parent"
     tools:context="com.simonepreite.winder.APDetails">
 
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        class="com.simonepreite.winder.fragments.APDetailsFragment"
+        tools:layout="@layout/fragment_apdetails">
+    </fragment>
+
 </android.support.constraint.ConstraintLayout>

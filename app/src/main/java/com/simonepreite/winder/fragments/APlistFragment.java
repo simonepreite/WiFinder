@@ -1,6 +1,8 @@
 package com.simonepreite.winder.fragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
@@ -15,7 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.simonepreite.winder.fragments.APDetailsFragment;
+import com.simonepreite.winder.APDetails;
 
 
 
@@ -97,10 +99,18 @@ public class APlistFragment extends Fragment {
         APShow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final String titoloriga = (String) parent.getItemAtPosition(position);
-                Toast.makeText(getActivity(), "Ho cliccato sull'elemento con titolo " + titoloriga, Toast.LENGTH_LONG).show();
+                final Intent intent = new Intent(getActivity(), APDetails.class);
+                final String info = (String) parent.getItemAtPosition(position);
+                int orientation = getActivity().getResources().getConfiguration().orientation;
+                //Toast.makeText(getActivity(), "Ho cliccato sull'elemento con titolo " + info, Toast.LENGTH_LONG).show();
                 APDetailsFragment Obj = (APDetailsFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.detailsFragment);
-                Obj.setMessage(titoloriga);
+                if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    intent.putExtra("Extra_Message", info);
+                    startActivity(intent);
+                }
+                else{
+                    Obj.setMessage(info);
+                }
             }
         });
 
