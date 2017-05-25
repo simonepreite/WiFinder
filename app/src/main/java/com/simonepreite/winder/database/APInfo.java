@@ -7,6 +7,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class APInfo extends SQLiteOpenHelper {
 
+    public static final String TABLE_GRADES = "grades";
+    public static final String COLUMN_ID = "_id";
+    public static final String COLUMN_SSID = "SSID";
+    public static final String COLUMN_MAC_ADDRESS = "macaddress";
+    public static final String COLUMN_CLASS = "class";
+    public static final String COLUMN_GRADE = "grade";
+
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "apinfo.db";
 
@@ -16,7 +23,7 @@ public class APInfo extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        db.execSQL();
     }
 
     @Override
