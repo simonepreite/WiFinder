@@ -70,13 +70,13 @@ public class APlistFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+
         void onFragmentInteraction(Uri uri);
     }
 
     public void createList(WifiManager wifiManager, View view){
 
-        List<ScanResult> apList = wifiManager.getScanResults();
+        final List<ScanResult> apList = wifiManager.getScanResults();
         final List<String> apString = new ArrayList<>();
         for (ScanResult ap : apList){
             if(ap.SSID != "")
@@ -85,6 +85,7 @@ public class APlistFragment extends Fragment {
         }
 
         final ListView APShow = (ListView) view.findViewById(R.id.listView);
+        APShow.setAdapter(null);
         final ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(getActivity(), R.layout.row, R.id.textViewList, apString);
         Toast.makeText(getActivity(), String.valueOf(adapter.getCount()), Toast.LENGTH_LONG).show();
@@ -100,7 +101,22 @@ public class APlistFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Intent intent = new Intent(getActivity(), APDetails.class);
-                final String info = (String) parent.getItemAtPosition(position);
+
+                final String reverse = (String) parent.getItemAtPosition(position);
+
+                //final ScanResult reverse = (ScanResult) parent.getItemAtPosition(position);
+                String info = null; //reverse.SSID + "\n" + reverse.BSSID + "\n" + reverse.capabilities + "\n";
+
+                for (ScanResult ap : apList){
+                    if(ap.SSID != reverse)
+                        info = ap.SSID + "\n" + ap.BSSID + "\n" + ap.capabilities + "\n";
+
+                    //non è la soluzione finale ancora perchè se ho due ap con lo stesso ssid prende l'ultimo in lista e non quello cliccato
+
+                        //apString.add(ap.SSID);
+                    //Toast.makeText(getActivity(), ap.SSID, Toast.LENGTH_SHORT).show();
+                }
+
                 int orientation = getActivity().getResources().getConfiguration().orientation;
                 //Toast.makeText(getActivity(), "Ho cliccato sull'elemento con titolo " + info, Toast.LENGTH_LONG).show();
                 APDetailsFragment Obj = (APDetailsFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.detailsFragment);

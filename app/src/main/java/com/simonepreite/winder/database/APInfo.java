@@ -10,7 +10,7 @@ public class APInfo extends SQLiteOpenHelper {
     public static final String TABLE_GRADES = "grades";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_SSID = "SSID";
-    public static final String COLUMN_MAC_ADDRESS = "macaddress";
+    public static final String COLUMN_MAC_ADDRESS = "BSSID";
     public static final String COLUMN_CLASS = "class";
     public static final String COLUMN_GRADE = "grade";
 
@@ -23,7 +23,8 @@ public class APInfo extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL();
+
+        //db.execSQL();
     }
 
     @Override
