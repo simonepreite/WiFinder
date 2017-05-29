@@ -18,10 +18,13 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.simonepreite.winder.APDetails;
+import com.simonepreite.winder.model.AccessPoint;
+
 
 
 
 import com.simonepreite.winder.R;
+import com.simonepreite.winder.model.AccessPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,16 +80,19 @@ public class APlistFragment extends Fragment {
     public void createList(WifiManager wifiManager, View view){
 
         final List<ScanResult> apList = wifiManager.getScanResults();
-        final List<String> apString = new ArrayList<>();
+        final ArrayList<AccessPoint> apString = new ArrayList<>();
         for (ScanResult ap : apList){
-            if(ap.SSID != "")
-                apString.add(ap.SSID);
-                //Toast.makeText(getActivity(), ap.SSID, Toast.LENGTH_SHORT).show();
+            if(ap.SSID != "") {
+                AccessPoint element = new AccessPoint(ap.SSID, ap.BSSID);
+                apString.add(element);
+                //apString.add(ap.SSID);
+                Toast.makeText(getActivity(), ap.SSID + "\n" + ap.BSSID, Toast.LENGTH_SHORT).show();
+            }
         }
 
         final ListView APShow = (ListView) view.findViewById(R.id.listView);
         APShow.setAdapter(null);
-        final ArrayAdapter<String> adapter =
+        final ArrayAdapter<AccessPoint> adapter =
                 new ArrayAdapter<>(getActivity(), R.layout.row, R.id.textViewList, apString);
         Toast.makeText(getActivity(), String.valueOf(adapter.getCount()), Toast.LENGTH_LONG).show();
         if(APShow != null) {
@@ -102,14 +108,15 @@ public class APlistFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Intent intent = new Intent(getActivity(), APDetails.class);
 
-                final String reverse = (String) parent.getItemAtPosition(position);
+                final AccessPoint reverse = (AccessPoint) parent.getItemAtPosition(position);
 
                 //final ScanResult reverse = (ScanResult) parent.getItemAtPosition(position);
                 String info = null; //reverse.SSID + "\n" + reverse.BSSID + "\n" + reverse.capabilities + "\n";
 
                 for (ScanResult ap : apList){
-                    if(ap.SSID != reverse)
+                    if(ap.BSSID == reverse.getMac()) {
                         info = ap.SSID + "\n" + ap.BSSID + "\n" + ap.capabilities + "\n";
+                    }
 
                     //non è la soluzione finale ancora perchè se ho due ap con lo stesso ssid prende l'ultimo in lista e non quello cliccato
 
