@@ -77,8 +77,6 @@ public class APlistFragment extends Fragment {
         wifiManager.startScan();
         final List<ScanResult> apList = wifiManager.getScanResults();
         ArrayList<HashMap<String, String>> apInfo = new ArrayList<HashMap<String, String>>();
-        String [] titleArray = new String[]{"Test1","Test2"};
-        String [] subItemArray = new String[]{"SubTest1","SubTest2"};
         for (ScanResult ap : apList){
             if(ap.SSID != "") {
                 HashMap<String,String> APelement = new HashMap<String, String>();
