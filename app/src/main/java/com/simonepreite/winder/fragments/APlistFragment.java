@@ -18,6 +18,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.simonepreite.winder.APDetails;
+import com.simonepreite.winder.gps.GPSTracker;
 
 import com.simonepreite.winder.R;
 
@@ -45,6 +46,13 @@ public class APlistFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 createList(wifiManager, v);
+                GPSTracker gps = new GPSTracker(getContext());
+                if(gps.canGetLocation()) {
+                    gps.getLatitude(); // returns latitude
+                    gps.getLongitude(); // returns longitude
+                    gps.showSettingsAlert();
+                    Toast.makeText(getActivity(), "post gps", Toast.LENGTH_LONG).show();
+                }
             }
         });
         createList(wifiManager, v);
@@ -113,7 +121,6 @@ public class APlistFragment extends Fragment {
                         info = ap.SSID + "\n" + ap.BSSID + "\n" + ap.capabilities + "\n";
                     }
                 }
-
                 int orientation = getActivity().getResources().getConfiguration().orientation;
                 APDetailsFragment Obj = (APDetailsFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.detailsFragment);
                 if(orientation == Configuration.ORIENTATION_PORTRAIT) {

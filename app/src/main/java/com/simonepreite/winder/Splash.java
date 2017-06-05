@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import android.net.wifi.WifiManager;
+import android.location.LocationManager;
+
 import android.content.Context;
 
 public class Splash extends AppCompatActivity {
