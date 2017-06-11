@@ -10,6 +10,8 @@ import android.location.LocationManager;
 
 import android.content.Context;
 
+import com.simonepreite.winder.services.APScan;
+
 public class Splash extends AppCompatActivity {
 
     private final int SPLASH_DISPLAY_LENGTH = 1000;
@@ -34,7 +36,6 @@ public class Splash extends AppCompatActivity {
 
     public void startActivity() {
         final Intent intent = new Intent(this, APList.class);
-
         startActivity(intent);
         finish();
     }

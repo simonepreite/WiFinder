@@ -18,7 +18,6 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.simonepreite.winder.APDetails;
-import com.simonepreite.winder.gps.GPSTracker;
 
 import com.simonepreite.winder.R;
 
@@ -46,13 +45,6 @@ public class APlistFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 createList(wifiManager, v);
-                GPSTracker gps = new GPSTracker(getContext());
-                if(gps.canGetLocation()) {
-                    gps.getLatitude(); // returns latitude
-                    gps.getLongitude(); // returns longitude
-                    gps.showSettingsAlert();
-                    Toast.makeText(getActivity(), "post gps", Toast.LENGTH_LONG).show();
-                }
             }
         });
         createList(wifiManager, v);
@@ -98,13 +90,13 @@ public class APlistFragment extends Fragment {
         APShow.setAdapter(null);
         final SimpleAdapter adapter =
                 new SimpleAdapter(getActivity(), apInfo, R.layout.row, new String[] {"RouterName", "RouterMac"}, new int[] {R.id.textViewList, R.id.subItemList});
-        Toast.makeText(getActivity(), String.valueOf(adapter.getCount()), Toast.LENGTH_LONG).show();
+        //Toast.makeText(getActivity(), String.valueOf(adapter.getCount()), Toast.LENGTH_LONG).show();
         if(APShow != null) {
             APShow.setAdapter(adapter);
             APShow.deferNotifyDataSetChanged();
         }
         else{
-            Toast.makeText(getActivity(), "APShow is null", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "APShow is null", Toast.LENGTH_SHORT).show();
         }
 
         APShow.setOnItemClickListener(new AdapterView.OnItemClickListener() {

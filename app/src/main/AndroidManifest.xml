@@ -26,7 +26,9 @@
         <activity android:name=".APList" />
         <activity android:name=".APDetails"></activity>
 
-        <service android:name=".gps.GPSTracker" />
+        <service
+            android:name=".services.APScan"
+            android:exported="false"/>
     </application>
 
 </manifest>
