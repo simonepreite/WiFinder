@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -37,7 +38,7 @@ public class APList extends FragmentActivity {
         }
         Log.i("service", "pre service");
         startScan();
-        IntentFilter statusIntentFilter = new IntentFilter(Constants.BROADCAST_ACTION);
+        //IntentFilter statusIntentFilter = new IntentFilter(Constants.BROADCAST_ACTION);
         //LocalBroadcastManager.getInstance(this).registerReceiver(serviceAPUpdate, statusIntentFilter);
         //registerReceiver(serviceAPUpdate, new IntentFilter(Constants.BROADCAST_ACTION));
     }
@@ -54,7 +55,7 @@ public class APList extends FragmentActivity {
         public void onReceive(Context context, Intent intent) {
             //String result = intent.getStringExtra(Constants.EXTENDED_DATA_STATUS);
             List<ScanResult> apList = (List<ScanResult>) intent.getSerializableExtra("APlist");
-            for (int i = 0; i < apList.size(); i++) {
+            /*for (int i = 0; i < apList.size(); i++) {
                 Toast toast = Toast.makeText(getApplicationContext(), "SSID: " + apList.get(i).SSID + "\n" +
                                 "BSSID: " + apList.get(i).BSSID + "\n" +
                                 "capabilities: " + apList.get(i).capabilities + "\n" +
@@ -63,7 +64,12 @@ public class APList extends FragmentActivity {
                                 "timestamp: " + apList.get(i).timestamp
                         , Toast.LENGTH_LONG);
                 toast.show();
-            }
+            }*/
+
+            Intent APUpdate = new Intent();
+            APUpdate.setAction(Constants.LIST_VIEW);
+            APUpdate.putParcelableArrayListExtra("APlist", (ArrayList<? extends Parcelable>) apList);
+            sendBroadcast(APUpdate);
 
 
         }

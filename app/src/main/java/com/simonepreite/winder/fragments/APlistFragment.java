@@ -31,7 +31,7 @@ import java.util.List;
 
 public class APlistFragment extends Fragment {
 
-    private ScanReceiver serviceAPUpdate;
+    private ListReceiver serviceAPUpdate;
 
     //private FloatingActionButton fab;
 
@@ -43,10 +43,10 @@ public class APlistFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        serviceAPUpdate = new ScanReceiver();
+        serviceAPUpdate = new ListReceiver();
         final View v = inflater.inflate(R.layout.fragment_aplist, container, false);
         //final WifiManager wifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        getActivity().registerReceiver(serviceAPUpdate, new IntentFilter(Constants.BROADCAST_ACTION));
+        getActivity().registerReceiver(serviceAPUpdate, new IntentFilter(Constants.LIST_VIEW));
         return v;
     }
 
@@ -72,7 +72,7 @@ public class APlistFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    class ScanReceiver extends BroadcastReceiver {
+    class ListReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {

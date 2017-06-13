@@ -59,11 +59,6 @@ public class APScan extends Service {
 
     @Override
     public void onCreate(){
-
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
         wifiReceiver = new WifiReceiver();
         registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION), null, serviceHandler);
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -76,7 +71,12 @@ public class APScan extends Service {
         //serviceHandler.sendMessage(msg);
 
         //Scanning();
-        return START_STICKY;
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+       return START_STICKY;
     }
 
     @Override
@@ -120,7 +120,7 @@ public class APScan extends Service {
             }*/
 
             Intent APUpdate = new Intent();
-            APUpdate.setAction(Constants.BROADCAST_ACTION);
+            APUpdate.setAction(Constants.LIST_VIEW);
             APUpdate.putParcelableArrayListExtra("APlist", (ArrayList<? extends Parcelable>) apList);
             sendBroadcast(APUpdate);
         }
