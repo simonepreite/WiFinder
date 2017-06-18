@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RemoteViews;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
@@ -31,11 +29,10 @@ import java.util.List;
 
 public class APlistFragment extends Fragment {
 
-    private ListReceiver serviceAPUpdate;
+    private ListReceiver APUpdate;
 
     //private FloatingActionButton fab;
 
-    private OnFragmentInteractionListener mListener;
 
     public APlistFragment() {
     }
@@ -43,17 +40,13 @@ public class APlistFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        serviceAPUpdate = new ListReceiver();
+        APUpdate = new ListReceiver();
         final View v = inflater.inflate(R.layout.fragment_aplist, container, false);
-        //final WifiManager wifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        getActivity().registerReceiver(serviceAPUpdate, new IntentFilter(Constants.LIST_VIEW));
+        getActivity().registerReceiver(APUpdate, new IntentFilter(Constants.LIST_VIEW));
         return v;
     }
 
     public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -64,7 +57,7 @@ public class APlistFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        getActivity().unregisterReceiver(APUpdate);
     }
 
     public interface OnFragmentInteractionListener {
@@ -137,8 +130,6 @@ public class APlistFragment extends Fragment {
                         , Toast.LENGTH_LONG);
                 toast.show();
             }*/
-
-
         }
     }
 

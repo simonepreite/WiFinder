@@ -32,6 +32,14 @@ public class Splash extends AppCompatActivity {
                 startActivity();
             }
         }, SPLASH_DISPLAY_LENGTH);
+
+        startScan();
+    }
+
+    public void startScan(){
+
+        final Intent scan = new Intent(this, APScan.class);
+        startService(scan);
     }
 
     public void startActivity() {
