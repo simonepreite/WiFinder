@@ -42,7 +42,7 @@ public class APlistFragment extends Fragment {
                              Bundle savedInstanceState) {
         APUpdate = new ListReceiver();
         final View v = inflater.inflate(R.layout.fragment_aplist, container, false);
-        getActivity().registerReceiver(APUpdate, new IntentFilter(Constants.LIST_VIEW));
+        getActivity().registerReceiver(APUpdate, new IntentFilter(Constants.LISTUPDATE));
         return v;
     }
 

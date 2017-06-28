@@ -6,9 +6,9 @@ package com.simonepreite.winder.services;
 
 public final class Constants {
     // Defines a custom Intent action
-    public static final String BROADCAST_ACTION =
-            "BROADCAST";
-    public static final String LIST_VIEW =
+    public static final String APUPDATE =
+            "APUPDATE";
+    public static final String LISTUPDATE =
             "LIST";
     // Defines the key for the status "extra" in an Intent
     public static final String EXTENDED_DATA_STATUS =

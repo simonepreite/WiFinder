@@ -3,12 +3,13 @@ package com.simonepreite.winder.threads;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import com.simonepreite.winder.Splash;
+import com.simonepreite.winder.database.APInfo;
 /**
  * Created by smogarch on 18/06/17.
  */
 
 public class wifiScanThread extends Thread {
-
     WifiManager wifi;
 
     public wifiScanThread(WifiManager wifiIstance){
