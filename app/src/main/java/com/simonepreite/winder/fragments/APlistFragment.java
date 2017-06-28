@@ -30,18 +30,17 @@ import java.util.List;
 public class APlistFragment extends Fragment {
 
     private ListReceiver APUpdate;
-
-    //private FloatingActionButton fab;
-
+    private View v;
 
     public APlistFragment() {
+        v = null;
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         APUpdate = new ListReceiver();
-        final View v = inflater.inflate(R.layout.fragment_aplist, container, false);
+        v = inflater.inflate(R.layout.fragment_aplist, container, false);
         getActivity().registerReceiver(APUpdate, new IntentFilter(Constants.LISTUPDATE));
         return v;
     }
@@ -118,7 +117,6 @@ public class APlistFragment extends Fragment {
                     }
                 }
             });
-
 
             /*for (int i = 0; i < apList.size(); i++) {
                 Toast toast = Toast.makeText(getActivity(), "SSID: " + apList.get(i).SSID + "\n" +

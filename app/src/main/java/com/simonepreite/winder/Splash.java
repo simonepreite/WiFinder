@@ -1,6 +1,7 @@
 package com.simonepreite.winder;
 
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,17 +27,27 @@ public class Splash extends AppCompatActivity {
 
         final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
+        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+        boolean enabled = service
+                .isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+
         if(!wifiManager.isWifiEnabled()) {
             wifiManager.setWifiEnabled(true);
         }
-        new Handler().postDelayed(new Runnable(){
-            @Override
-            public void run() {
-                startActivity();
-            }
-        }, SPLASH_DISPLAY_LENGTH);
-
-        startScan();
+        if (!enabled) {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+            finish();
+        }else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    start_init();
+                }
+            }, SPLASH_DISPLAY_LENGTH);
+            startScan();
+        }
     }
 
     public void startScan(){
@@ -45,7 +56,7 @@ public class Splash extends AppCompatActivity {
         startService(scan);
     }
 
-    public void startActivity() {
+    public void start_init() {
         final Intent intent = new Intent(this, APList.class);
         startActivity(intent);
         finish();

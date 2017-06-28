@@ -64,7 +64,7 @@ public class APScan extends Service {
                 toast.show();
             }*/
             Intent APUpdate = new Intent();
-            APUpdate.setAction(Constants.LIST_VIEW);
+            APUpdate.setAction(Constants.LISTUPDATE);
             APUpdate.putParcelableArrayListExtra("APlist", (ArrayList<? extends Parcelable>) apList);
             sendBroadcast(APUpdate);
         }
