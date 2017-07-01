@@ -5,30 +5,39 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 
-public class APInfo extends SQLiteOpenHelper {
 
-    public static final String COLUMN_SSID = "SSID";
-    public static final String COLUMN_MAC_ADDRESS = "BSSID";
-    public static final String DB = "level";
-    public static final String CAPABILITIES = "security";
-    public static final String POSITION = "security";
+public class APInfo extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "apInfo.db";
 
+    private static APInfo sInstance;
+
     private static final String SQL_CREATE_EXPENSE_TABLE =
-            "CREATE TABLE " + "APLIST" + " (" +
-                    COLUMN_MAC_ADDRESS + " TEXT NOT NULL," +
-                    COLUMN_SSID + " TEXT NOT NULL," +
-                    DB + " TEXT NOT NULL," +
-                    CAPABILITIES + " TEXT NOT NULL," +
-                    POSITION + " TEXT NOT NULL)" ;
+            "CREATE TABLE " + APAuxdb.APBaseColums.TABLE_NAME + " (" +
+                    APAuxdb.APBaseColums.COLUMN_MAC_ADDRESS + " TEXT NOT NULL," +
+                    APAuxdb.APBaseColums.COLUMN_SSID + " TEXT NOT NULL," +
+                    APAuxdb.APBaseColums.DB + " TEXT NOT NULL," +
+                    APAuxdb.APBaseColums.CAPABILITIES + " TEXT NOT NULL," +
+                    APAuxdb.APBaseColums.POSITION + " TEXT NOT NULL)" ;
 
     private static final String SQL_DELETE_EXPENSE_TABLE =
             "DROP TABLE IF EXISTS " + "APLIST";
 
     public APInfo(Context context) {
+
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public static synchronized APInfo getInstance(Context context) {
+
+        // Use the application context, which will ensure that you
+        // don't accidentally leak an Activity's context.
+        // See this article for more information: http://bit.ly/6LRzfx
+        if (sInstance == null) {
+            sInstance = new APInfo(context.getApplicationContext());
+        }
+        return sInstance;
     }
 
     @Override
