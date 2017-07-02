@@ -21,6 +21,8 @@ import com.simonepreite.winder.threads.wifiScanThread;
 import com.simonepreite.winder.database.APInfo;
 import com.simonepreite.winder.database.APAuxdb;
 
+import static com.simonepreite.winder.database.APInfo.*;
+
 public class APScan extends Service {
 
     private WifiManager Wmanager;
@@ -58,20 +60,24 @@ public class APScan extends Service {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            APInfo db = APInfo.getInstance(getApplicationContext());
-            SQLiteDatabase db_write = db.getWritableDatabase();
-            SQLiteDatabase db_read = db.getReadableDatabase();
-            ContentValues values = new ContentValues();
+            APInfo db = APInfo.getInstance(getApplication());
+            /*SQLiteDatabase db_write = db.getWritableDatabase();
+            ContentValues values = new ContentValues();*/
             final List<ScanResult> apList = Wmanager.getScanResults();
             for (int i = 0; i < apList.size(); i++) {
                 // in questo punto va controllato se il record esiste già (attraverso il macaddress)
-                // se esiste controllare se il segnale è più forte dall'ultimo aggiornamento e in caso positivo aggiornare le corrdinate
+                // se esiste controllare se il segnale è più forte dall'ultimo aggiornamento e in caso positivo aggiornare le cordinate
                 // altrimenti lasciare il record così com'è
-                values.put(APAuxdb.APBaseColums.COLUMN_MAC_ADDRESS, apList.get(i).BSSID);
+
+
+                db.insertScanRes(apList.get(i).BSSID, apList.get(i).level, apList.get(i).capabilities, apList.get(i).SSID);
+
+                /*values.put(APAuxdb.APBaseColums.COLUMN_MAC_ADDRESS, apList.get(i).BSSID);
                 values.put(APAuxdb.APBaseColums.DB, apList.get(i).level);
                 values.put(APAuxdb.APBaseColums.CAPABILITIES, apList.get(i).capabilities);
                 values.put(APAuxdb.APBaseColums.COLUMN_SSID, apList.get(i).SSID);
-                db_write.insert(APAuxdb.APBaseColums.TABLE_NAME, null, values);
+                db_write.insert(APAuxdb.APBaseColums.TABLE_NAME, null, values);*/
+
                 /*Toast toast = Toast.makeText(getApplicationContext(), "SSID: " + apList.get(i).SSID + "\n" +
                                 "BSSID: " + apList.get(i).BSSID + "\n" +
                                 "capabilities: " + apList.get(i).capabilities + "\n" +
@@ -86,7 +92,9 @@ public class APScan extends Service {
                     APAuxdb.APBaseColums.COLUMN_SSID,
                     APAuxdb.APBaseColums.DB,
             };
-            Cursor cursor = db_read.query(APAuxdb.APBaseColums.TABLE_NAME, projection, null, null, null, null, null);
+
+
+            Cursor cursor = db.getAP();
             int len = cursor.getCount();
             while(cursor.moveToNext()) {
                 String temp = cursor.getString(0);
