@@ -15,7 +15,8 @@ public class APAuxdb {
         public static final String COLUMN_MAC_ADDRESS = "BSSID";
         public static final String DB = "level";
         public static final String CAPABILITIES = "security";
-        public static final String POSITION = "gps_cordinates";
+        public static final String LATITUDE = "lat";
+        public static final String LONGITUDE = "lon";
     }
 
 

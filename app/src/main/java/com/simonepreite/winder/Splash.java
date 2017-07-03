@@ -12,7 +12,6 @@ import android.location.LocationManager;
 import android.content.Context;
 
 import com.simonepreite.winder.services.APScan;
-import com.simonepreite.winder.database.APInfo;
 
 public class Splash extends AppCompatActivity {
 

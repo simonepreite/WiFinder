@@ -5,10 +5,9 @@ import android.content.res.Configuration;
 
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 
-
-public class APList extends FragmentActivity {
+public class APList extends AppCompatActivity {
 
     private WifiManager Wmanager;
 

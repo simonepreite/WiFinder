@@ -30,8 +30,7 @@ public class APDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         root = (ViewGroup) inflater.inflate(R.layout.fragment_apdetails, null);
-        return root; //inflater.inflate(R.layout.fragment_apdetails, container, false);
-
+        return root;
     }
 
     public void onButtonPressed(Uri uri) {
