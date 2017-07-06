@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -25,6 +26,9 @@
         </activity>
         <activity android:name=".APList" />
         <activity android:name=".APDetails" />
+
+        <service android:name=".gps.GPSTracker"
+            android:exported="false" />
 
         <service
             android:name=".services.APScan"

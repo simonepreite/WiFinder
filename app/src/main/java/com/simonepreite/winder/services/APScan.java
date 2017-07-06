@@ -15,6 +15,12 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.location.LocationManager;
+import android.util.LongSparseArray;
+
+import com.simonepreite.winder.gps.GPSTracker;
+
+
 import com.simonepreite.winder.threads.wifiScanThread;
 import com.simonepreite.winder.database.APInfo;
 
@@ -57,11 +63,19 @@ public class APScan extends Service {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            GPSTracker gps = new GPSTracker(context);
+            double lat = 0;
+            double lon = 0;
+            if(gps.canGetLocation()) {
+                gps.getLocation();
+                lat = gps.getLatitude(); // returns latitude
+                lon = gps.getLongitude(); // returns longitude
+            }
             db = APInfo.getInstance(getApplicationContext());
             final List<ScanResult> apList = Wmanager.getScanResults();
             for (int i = 0; i < apList.size(); i++) {
-                long check = db.insertScanRes(apList.get(i).BSSID, apList.get(i).level, apList.get(i).capabilities, apList.get(i).SSID, 10, 10);
-                Log.i("ins record", "ap inserted: " + check );
+                long check = db.insertScanRes(apList.get(i).BSSID, apList.get(i).level, apList.get(i).capabilities, apList.get(i).SSID, lat, lon);
+                Log.i("ins record", "ap inserted: " + check + " lat: " + lat + " lon: " + lon);
             }
 
             Intent APUpdate = new Intent();

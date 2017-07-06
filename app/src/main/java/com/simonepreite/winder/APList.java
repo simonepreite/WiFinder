@@ -6,10 +6,12 @@ import android.content.res.Configuration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 public class APList extends AppCompatActivity {
 
     private WifiManager Wmanager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -42,7 +42,7 @@ public class Splash extends AppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    start_init();
+                    startInit();
                 }
             }, SPLASH_DISPLAY_LENGTH);
             startScan();
@@ -55,7 +55,7 @@ public class Splash extends AppCompatActivity {
         startService(scan);
     }
 
-    public void start_init() {
+    public void startInit() {
         final Intent intent = new Intent(this, APList.class);
         startActivity(intent);
         finish();
