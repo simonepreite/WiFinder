@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<android.support.design.widget.CoordinatorLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >-->
+    android:orientation="vertical">
 
 
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.simonepreite.winder.APDetails">
+    tools:context="com.simonepreite.winder.APDetails">-->
 
     <fragment
         android:id="@+id/listFragment"
-        android:layout_width="368dp"
-        android:layout_height="495dp"
         class="com.simonepreite.winder.fragments.APlistFragment"
-        tools:layout="@layout/fragment_aplist"
-        tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="8dp">
-    </fragment>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_aplist"></fragment>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/fabMap1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        app:fabSize="mini"
-        app:srcCompat="@android:drawable/ic_dialog_map"
-        tools:layout_editor_absoluteX="326dp"
-        tools:layout_editor_absoluteY="453dp" />
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_dialog_map"
+        app:layout_anchor="@id/listFragment"
+        app:layout_anchorGravity="bottom|right|end" />
 
-</android.support.constraint.ConstraintLayout>
+
+    <!--</android.support.constraint.ConstraintLayout>-->
 
 <!--</LinearLayout>-->
+</android.support.design.widget.CoordinatorLayout>

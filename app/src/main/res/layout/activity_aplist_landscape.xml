@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
+
 
     <fragment
         android:id="@+id/listFragment"
@@ -19,6 +21,18 @@
         android:layout_height="match_parent"
         class="com.simonepreite.winder.fragments.APDetailsFragment"
         tools:layout="@layout/fragment_apdetails">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabMap2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:src="@android:drawable/ic_dialog_map"
+            app:layout_anchor="@id/detailsFragment"
+            app:layout_anchorGravity="bottom|right|end" />
     </fragment>
+
+
 
 </LinearLayout>
