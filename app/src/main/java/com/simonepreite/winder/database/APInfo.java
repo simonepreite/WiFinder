@@ -15,7 +15,7 @@ import static com.simonepreite.winder.database.APAuxdb.APBaseColums.TABLE_NAME;
 
 public class APInfo extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "apInfo.db";
 
     private static APInfo sInstance;
@@ -64,21 +64,21 @@ public class APInfo extends SQLiteOpenHelper {
 
     public ArrayList<HashMap<String,String>> getAllEntries(){
         ArrayList<HashMap<String,String>> list = new ArrayList<>();
-        HashMap<String,String> temp = new HashMap<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c= db.rawQuery("select * from "+TABLE_NAME, null);
         c.moveToFirst();
         while (c.isAfterLast() == false) {
-            Log.i("BSSID", c.getString(0) + " " + c.getString(1) + " "+c.getString(2) + " "+c.getString(3) + " " + c.getString(4) + " " + c.getString(5));
+            HashMap<String,String> temp = new HashMap<>();
             temp.put("BSSID", c.getString(0));
+            temp.put("SSID", c.getString(1));
             temp.put("level", c.getString(2));
             temp.put("CAPABILITIES", c.getString(3));
-            temp.put("SSID", c.getString(1));
             temp.put("LATITUDE", c.getString(4));
             temp.put("LONGITUDE", c.getString(5));
             list.add(temp);
             c.moveToNext();
         }
+        c.close();
         return list;
     }
 
@@ -87,20 +87,32 @@ public class APInfo extends SQLiteOpenHelper {
         // se esiste controllare se il segnale è più forte dall'ultimo aggiornamento e in caso positivo aggiornare le cordinate
         // altrimenti lasciare il record così com'è
         // ha senso un thread che aggiorna il database?
+        Long newRowId = Long.valueOf(-1);
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(APAuxdb.APBaseColums.COLUMN_MAC_ADDRESS, BSSID);
-        values.put(APAuxdb.APBaseColums.DB, level);
-        values.put(APAuxdb.APBaseColums.CAPABILITIES, capabilities);
-        values.put(APAuxdb.APBaseColums.COLUMN_SSID, SSID);
-        values.put(APAuxdb.APBaseColums.LATITUDE, lat);
-        values.put(APAuxdb.APBaseColums.LONGITUDE, lon);
-        Long newRowId = db.insert(APAuxdb.APBaseColums.TABLE_NAME, null, values);
+        String[] args={BSSID};
+
+        Cursor c = db.rawQuery("select "+ APAuxdb.APBaseColums.DB +" from "+TABLE_NAME+" where "+APAuxdb.APBaseColums.COLUMN_MAC_ADDRESS+"=?", args);
+        String signal = "";
+        if(c!=null){
+            c.moveToFirst();
+            signal = c.getString(0);
+        }
+        if(signal!="" && Integer.parseInt(signal) > level){
+            ContentValues values = new ContentValues();
+            values.put(APAuxdb.APBaseColums.LATITUDE, lat); //These Fields should be your String values of actual column names
+            values.put(APAuxdb.APBaseColums.LONGITUDE, lon);
+            values.put(APAuxdb.APBaseColums.DB, level);
+            newRowId = Long.valueOf(db.update(TABLE_NAME, values, APAuxdb.APBaseColums.COLUMN_MAC_ADDRESS+"=?", args));
+        }else{
+            ContentValues values = new ContentValues();
+            values.put(APAuxdb.APBaseColums.COLUMN_MAC_ADDRESS, BSSID);
+            values.put(APAuxdb.APBaseColums.DB, level);
+            values.put(APAuxdb.APBaseColums.CAPABILITIES, capabilities);
+            values.put(APAuxdb.APBaseColums.COLUMN_SSID, SSID);
+            values.put(APAuxdb.APBaseColums.LATITUDE, lat);
+            values.put(APAuxdb.APBaseColums.LONGITUDE, lon);
+            newRowId = db.insert(APAuxdb.APBaseColums.TABLE_NAME, null, values);
+        }
         return newRowId;
     }
-
-    public Cursor getAP() {
-        return this.getWritableDatabase().query(APAuxdb.APBaseColums.TABLE_NAME, null, null, null, null, null, null);
-    }
-
 }

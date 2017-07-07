@@ -83,13 +83,18 @@ public class APMaps extends FragmentActivity implements OnMapReadyCallback {
                 .tilt(40)                   // Sets the tilt of the camera to 30 degrees
                 .build();                   // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        Log.i("list size", Integer.toString(list.size()));
 
         for(int i=0; i<list.size(); i++){
-            String temp = list.get(i).get("SSID");
+            String temp = String.valueOf(list.get(i).get("SSID"));
+            LatLng curLoc = new LatLng(Double.parseDouble(list.get(i).get("LATITUDE")), Double.parseDouble(list.get(i).get("LONGITUDE")));
+            if(list.get(i).get("CAPABILITIES").toLowerCase().contains("ess".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wpa".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wps".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wps".toLowerCase())) {
+                mMap.addMarker(new MarkerOptions().position(curLoc).title(temp).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+            }else{
+                mMap.addMarker(new MarkerOptions().position(curLoc).title(temp).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+            }
             Log.i("scandb", temp);
         }
-        // Add a marker in Sydney and move the camera
+        //Add a marker in Sydney and move the camera
         //LatLng curLoc = new LatLng(lat, lon);
         //mMap.addMarker(new MarkerOptions().position(curLoc).title("you are here"));
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(curLoc));
