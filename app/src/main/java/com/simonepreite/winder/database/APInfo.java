@@ -5,13 +5,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.simonepreite.winder.database.APAuxdb.APBaseColums.TABLE_NAME;
 
 
 public class APInfo extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
     private static final String DATABASE_NAME = "apInfo.db";
 
     private static APInfo sInstance;
@@ -56,6 +60,26 @@ public class APInfo extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(SQL_DELETE_EXPENSE_TABLE);
         onCreate(db);
+    }
+
+    public ArrayList<HashMap<String,String>> getAllEntries(){
+        ArrayList<HashMap<String,String>> list = new ArrayList<>();
+        HashMap<String,String> temp = new HashMap<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c= db.rawQuery("select * from "+TABLE_NAME, null);
+        c.moveToFirst();
+        while (c.isAfterLast() == false) {
+            Log.i("BSSID", c.getString(0) + " " + c.getString(1) + " "+c.getString(2) + " "+c.getString(3) + " " + c.getString(4) + " " + c.getString(5));
+            temp.put("BSSID", c.getString(0));
+            temp.put("level", c.getString(2));
+            temp.put("CAPABILITIES", c.getString(3));
+            temp.put("SSID", c.getString(1));
+            temp.put("LATITUDE", c.getString(4));
+            temp.put("LONGITUDE", c.getString(5));
+            list.add(temp);
+            c.moveToNext();
+        }
+        return list;
     }
 
     public long  insertScanRes(String BSSID, int level, String capabilities, String SSID, double lat, double lon){

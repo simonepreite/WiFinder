@@ -24,19 +24,30 @@ public class APList extends AppCompatActivity {
         if(orientation == Configuration.ORIENTATION_LANDSCAPE){
             setContentView(R.layout.activity_aplist_landscape);
             Wmanager.startScan();
-        }
-        else{
+            FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fabMap2);
+            fab2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Click action
+                    Intent intent = new Intent(APList.this, APMaps.class);
+                    startActivity(intent);
+                }
+            });
+
+        }else{
             setContentView(R.layout.activity_aplist);
             Wmanager.startScan();
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabMap1);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Click action
+                    Intent intent = new Intent(APList.this, APMaps.class);
+                    startActivity(intent);
+                }
+            });
+
         }
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabMap1);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Click action
-                Intent intent = new Intent(APList.this, APMaps.class);
-                startActivity(intent);
-            }
-        });
+
     }
 }
