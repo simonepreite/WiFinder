@@ -15,7 +15,7 @@ import static com.simonepreite.winder.database.APAuxdb.APBaseColums.TABLE_NAME;
 
 public class APInfo extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "apInfo.db";
 
     private static APInfo sInstance;
@@ -95,7 +95,12 @@ public class APInfo extends SQLiteOpenHelper {
         String signal = "";
         if(c!=null){
             c.moveToFirst();
-            signal = c.getString(0);
+            try{
+                signal = c.getString(0);
+            }catch (Exception exc){
+                Log.i("error handler: ", exc.getMessage());
+            }
+
         }
         if(signal!="" && Integer.parseInt(signal) > level){
             ContentValues values = new ContentValues();
@@ -114,5 +119,13 @@ public class APInfo extends SQLiteOpenHelper {
             newRowId = db.insert(APAuxdb.APBaseColums.TABLE_NAME, null, values);
         }
         return newRowId;
+    }
+
+    public Cursor getRowByMac(String BSSID){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = null;
+        String[] args = {BSSID};
+        c = db.rawQuery("select * from "+TABLE_NAME+" where "+APAuxdb.APBaseColums.COLUMN_MAC_ADDRESS+"=?", args);
+        return c;
     }
 }

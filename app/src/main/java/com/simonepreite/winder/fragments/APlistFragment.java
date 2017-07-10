@@ -97,6 +97,8 @@ public class APlistFragment extends Fragment {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     final Intent intent = new Intent(getActivity(), APDetails.class);
 
+                    // cercare dettagli nel database anzichè nella lista dell'ultimo scan
+
                     HashMap<String, String> reverse = (HashMap<String, String>)  parent.getItemAtPosition(position);
 
                     String info = null;
@@ -117,17 +119,6 @@ public class APlistFragment extends Fragment {
                     }
                 }
             });
-
-            /*for (int i = 0; i < apList.size(); i++) {
-                Toast toast = Toast.makeText(getActivity(), "SSID: " + apList.get(i).SSID + "\n" +
-                                "BSSID: " + apList.get(i).BSSID + "\n" +
-                                "capabilities: " + apList.get(i).capabilities + "\n" +
-                                "frequency: " + apList.get(i).frequency + "\n" +
-                                "level: " + apList.get(i).level + "\n" +
-                                "timestamp: " + apList.get(i).timestamp
-                        , Toast.LENGTH_LONG);
-                toast.show();
-            }*/
         }
     }
 

@@ -92,7 +92,6 @@ public class APMaps extends FragmentActivity implements OnMapReadyCallback {
             }else{
                 mMap.addMarker(new MarkerOptions().position(curLoc).title(temp).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
             }
-            Log.i("scandb", temp);
         }
         //Add a marker in Sydney and move the camera
         //LatLng curLoc = new LatLng(lat, lon);
