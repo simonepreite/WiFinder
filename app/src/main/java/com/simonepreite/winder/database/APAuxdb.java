@@ -10,7 +10,8 @@ public class APAuxdb {
     private APAuxdb(){}
 
     public static class APBaseColums implements BaseColumns{
-        public static final String TABLE_NAME = "APLIST";
+        public static final String TABLE_AP = "APLIST";
+        public static final String TABLE_MEASURATION = "MEASURATIONLIST";
         public static final String COLUMN_SSID = "SSID";
         public static final String COLUMN_MAC_ADDRESS = "BSSID";
         public static final String DB = "level";

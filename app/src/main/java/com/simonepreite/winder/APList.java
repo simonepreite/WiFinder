@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import com.simonepreite.winder.database.AndroidDatabaseManager;
+
 public class APList extends AppCompatActivity {
 
     private WifiManager Wmanager;
@@ -34,6 +36,16 @@ public class APList extends AppCompatActivity {
                 }
             });
 
+            FloatingActionButton dbfab2 =(FloatingActionButton) findViewById(R.id.fabDB2);
+
+            dbfab2.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+
+                    Intent dbmanager = new Intent(APList.this ,AndroidDatabaseManager.class);
+                    startActivity(dbmanager);
+                }
+            });
+
         }else{
             setContentView(R.layout.activity_aplist);
             Wmanager.startScan();
@@ -44,6 +56,15 @@ public class APList extends AppCompatActivity {
                     // Click action
                     Intent intent = new Intent(APList.this, APMaps.class);
                     startActivity(intent);
+                }
+            });
+            FloatingActionButton dbfab = (FloatingActionButton) findViewById(R.id.fabDB);
+
+            dbfab.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+
+                    Intent dbmanager = new Intent(APList.this ,AndroidDatabaseManager.class);
+                    startActivity(dbmanager);
                 }
             });
 

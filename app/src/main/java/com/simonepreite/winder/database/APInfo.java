@@ -3,6 +3,8 @@ package com.simonepreite.winder.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.MatrixCursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -10,8 +12,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.simonepreite.winder.database.APAuxdb.APBaseColums.TABLE_NAME;
-
+import static com.simonepreite.winder.database.APAuxdb.APBaseColums.*;
+import static com.simonepreite.winder.database.APQuery.*;
 
 public class APInfo extends SQLiteOpenHelper {
 
@@ -19,19 +21,6 @@ public class APInfo extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "apInfo.db";
 
     private static APInfo sInstance;
-
-    private static final String SQL_CREATE_EXPENSE_TABLE =
-            "CREATE TABLE " + TABLE_NAME + "(" +
-                    APAuxdb.APBaseColums.COLUMN_MAC_ADDRESS + " STRING PRIMARY KEY," +
-                    APAuxdb.APBaseColums.COLUMN_SSID + " STRING NOT NULL," +
-                    APAuxdb.APBaseColums.DB + " INT NOT NULL," +
-                    APAuxdb.APBaseColums.CAPABILITIES + " STRING NOT NULL," +
-                    APAuxdb.APBaseColums.LATITUDE+" DOUBLE,"+
-                    APAuxdb.APBaseColums.LONGITUDE+" DOUBLE"+
-                    ")" ;
-
-    private static final String SQL_DELETE_EXPENSE_TABLE =
-            "DROP TABLE IF EXISTS " + TABLE_NAME;
 
     public APInfo(Context context) {
 
@@ -52,72 +41,65 @@ public class APInfo extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        db.execSQL(SQL_CREATE_EXPENSE_TABLE);
+        db.execSQL(SQL_CREATE_AP_TABLE);
+        db.execSQL(SQL_CREATE_MISURATION_TABLE);
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_DELETE_EXPENSE_TABLE);
+        db.execSQL(SQL_DELETE_AP_TABLE);
+        db.execSQL(SQL_DELETE_MISURATION_TABLE);
         onCreate(db);
     }
 
     public ArrayList<HashMap<String,String>> getAllEntries(){
         ArrayList<HashMap<String,String>> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c= db.rawQuery("select * from "+TABLE_NAME, null);
+        Cursor c= db.rawQuery(GET_ALL_ENTRIES, null);
         c.moveToFirst();
         while (c.isAfterLast() == false) {
             HashMap<String,String> temp = new HashMap<>();
-            temp.put("BSSID", c.getString(0));
-            temp.put("SSID", c.getString(1));
-            temp.put("level", c.getString(2));
-            temp.put("CAPABILITIES", c.getString(3));
-            temp.put("LATITUDE", c.getString(4));
-            temp.put("LONGITUDE", c.getString(5));
+            temp.put("BSSID", c.getString(c.getColumnIndex(COLUMN_MAC_ADDRESS)));
+            temp.put("SSID", c.getString(c.getColumnIndex(COLUMN_SSID)));
+            temp.put("CAPABILITIES", c.getString(c.getColumnIndex(CAPABILITIES)));
+            Cursor c2 = getAPposition(c.getString(c.getColumnIndex(COLUMN_MAC_ADDRESS)));
+            c2.moveToFirst();
+            if (c2.moveToFirst()) {
+                do {
+                    temp.put("LATITUDE", c2.getString(c2.getColumnIndex(LATITUDE)));
+                    temp.put("LONGITUDE", c2.getString(c2.getColumnIndex(LONGITUDE)));
+                } while (c2.moveToNext());
+            }
+            c2.close();
             list.add(temp);
             c.moveToNext();
         }
         c.close();
+        db.close();
         return list;
     }
 
     public long  insertScanRes(String BSSID, int level, String capabilities, String SSID, double lat, double lon){
-        // in questo punto va controllato se il record esiste già (attraverso il macaddress)
-        // se esiste controllare se il segnale è più forte dall'ultimo aggiornamento e in caso positivo aggiornare le cordinate
-        // altrimenti lasciare il record così com'è
-        // ha senso un thread che aggiorna il database?
+
         Long newRowId = Long.valueOf(-1);
         SQLiteDatabase db = this.getWritableDatabase();
-        String[] args={BSSID};
 
-        Cursor c = db.rawQuery("select "+ APAuxdb.APBaseColums.DB +" from "+TABLE_NAME+" where "+APAuxdb.APBaseColums.COLUMN_MAC_ADDRESS+"=?", args);
-        String signal = "";
-        if(c!=null){
-            c.moveToFirst();
-            try{
-                signal = c.getString(0);
-            }catch (Exception exc){
-                Log.i("error handler: ", exc.getMessage());
-            }
+            ContentValues values_ap = new ContentValues();
+            ContentValues values_misuration = new ContentValues();
 
-        }
-        if(signal!="" && Integer.parseInt(signal) > level){
-            ContentValues values = new ContentValues();
-            values.put(APAuxdb.APBaseColums.LATITUDE, lat); //These Fields should be your String values of actual column names
-            values.put(APAuxdb.APBaseColums.LONGITUDE, lon);
-            values.put(APAuxdb.APBaseColums.DB, level);
-            newRowId = Long.valueOf(db.update(TABLE_NAME, values, APAuxdb.APBaseColums.COLUMN_MAC_ADDRESS+"=?", args));
-        }else{
-            ContentValues values = new ContentValues();
-            values.put(APAuxdb.APBaseColums.COLUMN_MAC_ADDRESS, BSSID);
-            values.put(APAuxdb.APBaseColums.DB, level);
-            values.put(APAuxdb.APBaseColums.CAPABILITIES, capabilities);
-            values.put(APAuxdb.APBaseColums.COLUMN_SSID, SSID);
-            values.put(APAuxdb.APBaseColums.LATITUDE, lat);
-            values.put(APAuxdb.APBaseColums.LONGITUDE, lon);
-            newRowId = db.insert(APAuxdb.APBaseColums.TABLE_NAME, null, values);
-        }
+            values_ap.put(COLUMN_MAC_ADDRESS, BSSID);
+            values_ap.put(CAPABILITIES, capabilities);
+            values_ap.put(COLUMN_SSID, SSID);
+
+            values_misuration.put(COLUMN_MAC_ADDRESS, BSSID);
+            values_misuration.put(DB, level);
+            values_misuration.put(LATITUDE, lat);
+            values_misuration.put(LONGITUDE, lon);
+
+            newRowId = db.insert(TABLE_AP, null, values_ap);
+            db.insert(TABLE_MEASURATION, null, values_misuration);
+
         return newRowId;
     }
 
@@ -125,7 +107,90 @@ public class APInfo extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = null;
         String[] args = {BSSID};
-        c = db.rawQuery("select * from "+TABLE_NAME+" where "+APAuxdb.APBaseColums.COLUMN_MAC_ADDRESS+"=?", args);
+        c = db.rawQuery(GET_ROW_BY_MAC , args);
         return c;
+    }
+
+    public double estimateCoverage(String BSSID){
+        Cursor APposition = getAPposition(BSSID);
+        Cursor APLastDistance = getAPcoverage(BSSID);
+        double earthRadius = 6371000;
+        double coverage;
+        double APLat = APposition.getDouble(APposition.getColumnIndex(LATITUDE));
+        double APLon = APposition.getDouble(APposition.getColumnIndex(LONGITUDE));
+        double APLatDistance = APLastDistance.getDouble(APLastDistance.getColumnIndex(LATITUDE));
+        double APLonDistance = APLastDistance.getDouble(APLastDistance.getColumnIndex(LONGITUDE));
+        double phy1 = Math.toRadians(APLat);
+        double phy2 = Math.toRadians(APLatDistance);
+        double deltaLat = Math.toRadians(APLatDistance - APLat);
+        double deltaLon = Math.toRadians(APLonDistance - APLon);
+
+        double tmp = Math.sin(deltaLat/2)*Math.sin(deltaLat/2)+
+                     Math.cos(phy1/2)*Math.cos(phy2/2)*
+                     Math.sin(deltaLon/2)*Math.sin(deltaLon/2);
+        coverage = 2 * Math.atan2(Math.sqrt(tmp), Math.sqrt(1-tmp)) * earthRadius;
+        return coverage;
+    }
+
+    public Cursor getAPposition(String BSSID){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] arg = {BSSID};
+        Cursor c = db.rawQuery(GET_AP_POSITION, arg);
+        c.moveToFirst();
+        db.close();
+        return c;
+    }
+
+    public Cursor getAPcoverage(String BSSID){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] arg = {BSSID};
+        Cursor c = db.rawQuery(GET_AP_COVERAGE, arg);
+        c.moveToFirst();
+        db.close();
+        return c;
+    }
+
+    public ArrayList<Cursor> getData(String Query){
+        //get writable database
+        SQLiteDatabase sqlDB = this.getWritableDatabase();
+        String[] columns = new String[] { "message" };
+        //an array list of cursor to save two cursors one has results from the query
+        //other cursor stores error message if any errors are triggered
+        ArrayList<Cursor> alc = new ArrayList<Cursor>(2);
+        MatrixCursor Cursor2= new MatrixCursor(columns);
+        alc.add(null);
+        alc.add(null);
+
+        try{
+            String maxQuery = Query ;
+            //execute the query results will be save in Cursor c
+            Cursor c = sqlDB.rawQuery(maxQuery, null);
+
+            //add value to cursor2
+            Cursor2.addRow(new Object[] { "Success" });
+
+            alc.set(1,Cursor2);
+            if (null != c && c.getCount() > 0) {
+
+                alc.set(0,c);
+                c.moveToFirst();
+
+                return alc ;
+            }
+            return alc;
+        } catch(SQLException sqlEx){
+            Log.d("printing exception", sqlEx.getMessage());
+            //if any exceptions are triggered save the error message to cursor an return the arraylist
+            Cursor2.addRow(new Object[] { ""+sqlEx.getMessage() });
+            alc.set(1,Cursor2);
+            return alc;
+        } catch(Exception ex){
+            Log.d("printing exception", ex.getMessage());
+
+            //if any exceptions are triggered save the error message to cursor an return the arraylist
+            Cursor2.addRow(new Object[] { ""+ex.getMessage() });
+            alc.set(1,Cursor2);
+            return alc;
+        }
     }
 }

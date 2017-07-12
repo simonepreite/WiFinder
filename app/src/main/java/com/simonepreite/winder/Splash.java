@@ -34,11 +34,17 @@ public class Splash extends AppCompatActivity {
         if(!wifiManager.isWifiEnabled()) {
             wifiManager.setWifiEnabled(true);
         }
-        if (!enabled) {
+        if(!enabled) {
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);
-            finish();
-        }else {
+            while (!enabled) {
+                enabled = service
+                        .isProviderEnabled(LocationManager.GPS_PROVIDER);
+                //intent.addFlags();
+                //finish();
+            }
+        }
+        //else {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -46,7 +52,7 @@ public class Splash extends AppCompatActivity {
                 }
             }, SPLASH_DISPLAY_LENGTH);
             startScan();
-        }
+        //}
     }
 
     public void startScan(){
