@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,27 +25,35 @@ import com.simonepreite.winder.database.APInfo;
 import com.simonepreite.winder.fragments.APlistFragment;
 import com.simonepreite.winder.gps.GPSTracker;
 import com.simonepreite.winder.services.Constants;
+import com.simonepreite.winder.threads.updateMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static java.lang.Thread.sleep;
 
 public class APMaps extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private APInfo db;
-    private ListReceiver APUpdate;
+    private updateMap upMap;
+    //private ListReceiver APUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        APUpdate = new ListReceiver();
+        //APUpdate = new ListReceiver();
         setContentView(R.layout.activity_apmaps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        this.registerReceiver(APUpdate, new IntentFilter(Constants.LISTUPDATE));
+        //this.registerReceiver(APUpdate, new IntentFilter(Constants.LISTUPDATE));
         db = APInfo.getInstance(getApplicationContext());
+        //upMap = new updateMap(mMap, db);
+        //upMap.start();
+        new PositionUpdate1().execute();
+
     }
 
 
@@ -70,7 +80,8 @@ public class APMaps extends FragmentActivity implements OnMapReadyCallback {
             return;
         }*/
         mMap.setMyLocationEnabled(true);
-        updateMap(mMap);
+        updateM();
+
         updateCam(mMap);
     }
 
@@ -93,9 +104,9 @@ public class APMaps extends FragmentActivity implements OnMapReadyCallback {
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
-    public void updateMap(GoogleMap mMap){
+    public void updateM(){
         ArrayList<HashMap<String,String>> list = db.getAllEntries();
-
+        mMap.clear();
         for(int i=0; i<list.size(); i++){
             String temp = String.valueOf(list.get(i).get("SSID"));
             LatLng curLoc = new LatLng(Double.parseDouble(list.get(i).get("LATITUDE")), Double.parseDouble(list.get(i).get("LONGITUDE")));
@@ -105,6 +116,8 @@ public class APMaps extends FragmentActivity implements OnMapReadyCallback {
                 mMap.addMarker(new MarkerOptions().position(curLoc).title(temp).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
             }
             double cover = db.estimateCoverage(list.get(i).get("BSSID"));
+            if(cover > 100) cover = 80;
+            Log.i("debug coverage: ", "SSID: " + list.get(i).get("SSID") + " radius: " + String.valueOf(cover));
             mMap.addCircle(new CircleOptions()
                     .center(curLoc)
                     .radius(cover)
@@ -115,11 +128,42 @@ public class APMaps extends FragmentActivity implements OnMapReadyCallback {
         }
     }
 
-    class ListReceiver extends BroadcastReceiver {
+
+    public class PositionUpdate1  extends AsyncTask<Void, Void, Void>{
+
 
         @Override
-        public void onReceive(Context context, Intent intent) {
-            updateMap(mMap);
+        protected Void doInBackground(Void...arg0) {
+            for (; ; ) {
+                try {
+                    sleep(5000);
+
+                    ArrayList<HashMap<String, String>> list = db.getAllEntries();
+                    mMap.clear();
+                    for (int i = 0; i < list.size(); i++) {
+                        String temp = String.valueOf(list.get(i).get("SSID"));
+                        LatLng curLoc = new LatLng(Double.parseDouble(list.get(i).get("LATITUDE")), Double.parseDouble(list.get(i).get("LONGITUDE")));
+                        if (list.get(i).get("CAPABILITIES").toLowerCase().contains("ess".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wpa".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wps".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wps".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wep".toLowerCase())) {
+                            mMap.addMarker(new MarkerOptions().position(curLoc).title(temp).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                        } else {
+                            mMap.addMarker(new MarkerOptions().position(curLoc).title(temp).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        }
+                        double cover = db.estimateCoverage(list.get(i).get("BSSID"));
+                        if (cover > 100) cover = 80;
+                        Log.i("debug coverage: ", "SSID: " + list.get(i).get("SSID") + " radius: " + String.valueOf(cover));
+                        mMap.addCircle(new CircleOptions()
+                                .center(curLoc)
+                                .radius(cover)
+                                .strokeColor(Color.TRANSPARENT)
+                                .fillColor(Color.parseColor("#8014EE91"))
+                                .zIndex(1.0f)
+                        );
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
         }
     }
 }

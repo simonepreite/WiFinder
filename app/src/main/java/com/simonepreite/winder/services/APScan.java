@@ -29,7 +29,7 @@ public class APScan extends Service {
 
     private WifiManager Wmanager;
     private WifiReceiver Wreceiver;
-    private wifiScanThread firstScanThread;
+    private wifiScanThread ScanThread;
     private APInfo db;
 
     public APScan() {
@@ -47,8 +47,8 @@ public class APScan extends Service {
         Wreceiver = new WifiReceiver();
         registerReceiver(Wreceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         Wmanager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        firstScanThread = new wifiScanThread(Wmanager);
-        firstScanThread.start();
+        ScanThread = new wifiScanThread(Wmanager);
+        ScanThread.start();
         Wmanager.startScan();
         return START_STICKY;
     }

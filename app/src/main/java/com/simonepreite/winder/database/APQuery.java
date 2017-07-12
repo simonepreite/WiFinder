@@ -32,7 +32,7 @@ public class APQuery {
     public static String SQL_DELETE_AP_TABLE =
             "DROP TABLE IF EXISTS " + TABLE_AP;
 
-    public static String SQL_DELETE_MISURATION_TABLE =
+    public static String SQL_DELETE_MEASURATION_TABLE =
             "DROP TABLE IF EXISTS " + TABLE_AP;
 
     //QUERIES
@@ -50,4 +50,6 @@ public class APQuery {
     public static String GET_ALL_ENTRIES = "select * from " + TABLE_AP;
 
     public static String GET_ROW_BY_MAC = "select * from "+ TABLE_AP +" where "+ COLUMN_MAC_ADDRESS + "=?";
+
+    public static String GET_MIS = "select * from "+ TABLE_MEASURATION +" where "+ COLUMN_MAC_ADDRESS + "=? and " + DB + "=?";
 }

@@ -49,7 +49,7 @@ public class APInfo extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(SQL_DELETE_AP_TABLE);
-        db.execSQL(SQL_DELETE_MISURATION_TABLE);
+        db.execSQL(SQL_DELETE_MEASURATION_TABLE);
         onCreate(db);
     }
 
@@ -87,6 +87,8 @@ public class APInfo extends SQLiteOpenHelper {
 
             ContentValues values_ap = new ContentValues();
             ContentValues values_misuration = new ContentValues();
+            boolean exist = checkPrimaryKey(BSSID);
+            boolean mis = checkMisExist(BSSID, level);
 
             values_ap.put(COLUMN_MAC_ADDRESS, BSSID);
             values_ap.put(CAPABILITIES, capabilities);
@@ -96,10 +98,12 @@ public class APInfo extends SQLiteOpenHelper {
             values_misuration.put(DB, level);
             values_misuration.put(LATITUDE, lat);
             values_misuration.put(LONGITUDE, lon);
-
-            newRowId = db.insert(TABLE_AP, null, values_ap);
-            db.insert(TABLE_MEASURATION, null, values_misuration);
-
+            if(!exist) {
+                newRowId = db.insert(TABLE_AP, null, values_ap);
+            }
+            if(!mis) {
+                db.insert(TABLE_MEASURATION, null, values_misuration);
+            }
         return newRowId;
     }
 
@@ -132,7 +136,7 @@ public class APInfo extends SQLiteOpenHelper {
         return coverage;
     }
 
-    public Cursor getAPposition(String BSSID){
+    private Cursor getAPposition(String BSSID){
         SQLiteDatabase db = this.getReadableDatabase();
         String[] arg = {BSSID};
         Cursor c = db.rawQuery(GET_AP_POSITION, arg);
@@ -141,7 +145,7 @@ public class APInfo extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getAPcoverage(String BSSID){
+    private Cursor getAPcoverage(String BSSID){
         SQLiteDatabase db = this.getReadableDatabase();
         String[] arg = {BSSID};
         Cursor c = db.rawQuery(GET_AP_COVERAGE, arg);
@@ -149,6 +153,26 @@ public class APInfo extends SQLiteOpenHelper {
         db.close();
         return c;
     }
+
+    private boolean checkPrimaryKey(String BSSID){
+        SQLiteDatabase db = this.getReadableDatabase();
+        boolean res = false;
+        String[] arg = {BSSID};
+        Cursor c = db.rawQuery(GET_ROW_BY_MAC, arg);
+        if(c.getCount() > 0) res = true;
+        return res;
+    }
+
+    private boolean checkMisExist(String BSSID, int level){
+        SQLiteDatabase db = this.getReadableDatabase();
+        boolean res = false;
+        String[] arg = {BSSID, String.valueOf(level)};
+        Cursor c = db.rawQuery(GET_MIS, arg);
+        if(c.getCount() > 0) res = true;
+        return res;
+
+    }
+
 
     public ArrayList<Cursor> getData(String Query){
         //get writable database
