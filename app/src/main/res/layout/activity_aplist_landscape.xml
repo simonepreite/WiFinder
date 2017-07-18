@@ -22,25 +22,7 @@
         class="com.simonepreite.winder.fragments.APDetailsFragment"
         tools:layout="@layout/fragment_apdetails">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabMap2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_margin="16dp"
-            android:src="@android:drawable/ic_dialog_map"
-            app:layout_anchor="@id/detailsFragment"
-            app:layout_anchorGravity="bottom|right|end" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabDB2"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|right"
-            android:layout_margin="16dp"
-            app:layout_anchor="@id/listFragment"
-            app:layout_anchorGravity="top|right"
-            app:srcCompat="@android:drawable/ic_menu_edit" />
 
     </fragment>
 

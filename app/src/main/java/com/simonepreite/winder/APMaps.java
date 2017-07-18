@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,7 +33,7 @@ import java.util.HashMap;
 
 import static java.lang.Thread.sleep;
 
-public class APMaps extends FragmentActivity implements OnMapReadyCallback {
+public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private APInfo db;
