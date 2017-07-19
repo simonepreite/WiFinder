@@ -3,12 +3,11 @@ package com.simonepreite.winder.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,15 +19,15 @@ import com.simonepreite.winder.R;
 import com.simonepreite.winder.database.APInfo;
 import com.simonepreite.winder.gps.GPSTracker;
 
-public class APDetailsFragment extends Fragment implements OnMapReadyCallback {
+public class APDetailsFragment extends Fragment /*implements OnMapReadyCallback*/ {
 
 
-    private GoogleMap mMap;
-    private APInfo db;
+    /*private GoogleMap mMap;
+    private APInfo db;*/
     private Fragment myContext;
 
 
-    @Override
+    /*@Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);
@@ -53,7 +52,7 @@ public class APDetailsFragment extends Fragment implements OnMapReadyCallback {
                 .tilt(40)                   // Sets the tilt of the camera to 30 degrees
                 .build();                   // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    }
+    }*/
 
     ViewGroup root;
     private OnFragmentInteractionListener mListener;
@@ -65,15 +64,15 @@ public class APDetailsFragment extends Fragment implements OnMapReadyCallback {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SupportMapFragment mapFragment = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map));
-        mapFragment.getMapAsync(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        root = (ViewGroup) inflater.inflate(R.layout.fragment_apdetails, container);
+        root = (ViewGroup) inflater.inflate(R.layout.fragment_apdetails, null, false);
 
+       /* SupportMapFragment mapFragment = ((SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map2));
+        mapFragment.getMapAsync(this);*/
 
         return root;
     }

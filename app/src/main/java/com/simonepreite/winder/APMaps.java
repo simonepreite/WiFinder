@@ -60,83 +60,18 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
         //registerReceiver(APUpdate, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         //new PositionUpdate1().execute();
 
-
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-        }*/
-        mMap.setMyLocationEnabled(true);
-        updateM();
-
-        //upMap = new updateMap(this.mMap, this.db);
-        //this.upMap.start();
-        updateCam(mMap);
-
-        //new PositionUpdate1().execute();
-        /*new Thread(new Runnable() {
-            public void run(){
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        for(;;) {
-                            try {
-                                sleep(5000);
-
-                                ArrayList<HashMap<String,String>> list = db.getAllEntries();
-                                mMap.clear();
-                                for(int i=0; i<list.size(); i++){
-                                    String temp = String.valueOf(list.get(i).get("SSID"));
-                                    LatLng curLoc = new LatLng(Double.parseDouble(list.get(i).get("LATITUDE")), Double.parseDouble(list.get(i).get("LONGITUDE")));
-                                    if(list.get(i).get("CAPABILITIES").toLowerCase().contains("ess".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wpa".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wps".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wps".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wep".toLowerCase())) {
-                                        mMap.addMarker(new MarkerOptions().position(curLoc).title(temp).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-                                    }else{
-                                        mMap.addMarker(new MarkerOptions().position(curLoc).title(temp).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                                    }
-                                    double cover = db.estimateCoverage(list.get(i).get("BSSID"));
-                                    if(cover > 100) cover = 80;
-                                    Log.i("debug coverage: ", "SSID: " + list.get(i).get("SSID") + " radius: " + String.valueOf(cover));
-                                    mMap.addCircle(new CircleOptions()
-                                            .center(curLoc)
-                                            .radius(cover)
-                                            .strokeColor(Color.TRANSPARENT)
-                                            .fillColor(Color.parseColor("#8014EE91"))
-                                            .zIndex(1.0f)
-                                    );
-                                }
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-
-                        }
-                    }
-                }
-                );
-            }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+            updateM();
+            new updateThread().execute();
+            updateCam(mMap);
         }
-        ).start();*/
+
     }
 
     public void updateCam(GoogleMap mMap){
@@ -197,17 +132,17 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
         protected Void doInBackground(Void...voids) {
             while(true)
             {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Thread.sleep(15000);
-                            updateM();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                try {
+                    Thread.sleep(15000);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                                updateM();
                         }
-                    }
-                });
+                    });
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

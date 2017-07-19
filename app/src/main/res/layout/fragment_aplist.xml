@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.simonepreite.winder.fragments.APDetailsFragment">
 
     <ListView
@@ -11,5 +12,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/backgroundList" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabMap2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_dialog_map"
+        app:layout_anchor="@id/detailsFragment"
+        app:layout_anchorGravity="bottom|right|end" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabDB2"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right"
+        android:layout_margin="16dp"
+        app:layout_anchor="@id/listFragment"
+        app:layout_anchorGravity="top|right"
+        app:srcCompat="@android:drawable/ic_menu_edit" />
 
 </FrameLayout>

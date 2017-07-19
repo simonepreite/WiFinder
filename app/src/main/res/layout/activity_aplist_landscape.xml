@@ -21,9 +21,6 @@
         android:layout_height="match_parent"
         class="com.simonepreite.winder.fragments.APDetailsFragment"
         tools:layout="@layout/fragment_apdetails">
-
-
-
     </fragment>
 
 
