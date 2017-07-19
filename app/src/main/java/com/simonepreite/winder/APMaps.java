@@ -1,11 +1,15 @@
 package com.simonepreite.winder;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -35,10 +39,11 @@ import static java.lang.Thread.sleep;
 
 public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
+    public GoogleMap mMap;
     private APInfo db;
     private updateMap upMap;
-    //private ListReceiver APUpdate;
+    private ciao APUpdate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +54,12 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        //this.registerReceiver(APUpdate, new IntentFilter(Constants.LISTUPDATE));
+        //APUpdate = new ciao();
+        //this.registerReceiver(APUpdate, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         db = APInfo.getInstance(getApplicationContext());
-        //upMap = new updateMap(mMap, db);
-        //upMap.start();
-        new PositionUpdate1().execute();
+        //registerReceiver(APUpdate, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        //new PositionUpdate1().execute();
+
 
     }
 
@@ -78,12 +84,59 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            return;
         }*/
         mMap.setMyLocationEnabled(true);
         updateM();
 
+        //upMap = new updateMap(this.mMap, this.db);
+        //this.upMap.start();
         updateCam(mMap);
+
+        //new PositionUpdate1().execute();
+        /*new Thread(new Runnable() {
+            public void run(){
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        for(;;) {
+                            try {
+                                sleep(5000);
+
+                                ArrayList<HashMap<String,String>> list = db.getAllEntries();
+                                mMap.clear();
+                                for(int i=0; i<list.size(); i++){
+                                    String temp = String.valueOf(list.get(i).get("SSID"));
+                                    LatLng curLoc = new LatLng(Double.parseDouble(list.get(i).get("LATITUDE")), Double.parseDouble(list.get(i).get("LONGITUDE")));
+                                    if(list.get(i).get("CAPABILITIES").toLowerCase().contains("ess".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wpa".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wps".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wps".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wep".toLowerCase())) {
+                                        mMap.addMarker(new MarkerOptions().position(curLoc).title(temp).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                                    }else{
+                                        mMap.addMarker(new MarkerOptions().position(curLoc).title(temp).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                                    }
+                                    double cover = db.estimateCoverage(list.get(i).get("BSSID"));
+                                    if(cover > 100) cover = 80;
+                                    Log.i("debug coverage: ", "SSID: " + list.get(i).get("SSID") + " radius: " + String.valueOf(cover));
+                                    mMap.addCircle(new CircleOptions()
+                                            .center(curLoc)
+                                            .radius(cover)
+                                            .strokeColor(Color.TRANSPARENT)
+                                            .fillColor(Color.parseColor("#8014EE91"))
+                                            .zIndex(1.0f)
+                                    );
+                                }
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+                    }
+                }
+                );
+            }
+        }
+        ).start();*/
     }
 
     public void updateCam(GoogleMap mMap){
@@ -129,41 +182,32 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
         }
     }
 
+    class ciao extends BroadcastReceiver {
 
-    public class PositionUpdate1  extends AsyncTask<Void, Void, Void>{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateM();
+        }
+    }
+
+    public class updateThread  extends AsyncTask<Void, Void, Void>{
 
 
         @Override
-        protected Void doInBackground(Void...arg0) {
-            for (; ; ) {
-                try {
-                    sleep(5000);
-
-                    ArrayList<HashMap<String, String>> list = db.getAllEntries();
-                    mMap.clear();
-                    for (int i = 0; i < list.size(); i++) {
-                        String temp = String.valueOf(list.get(i).get("SSID"));
-                        LatLng curLoc = new LatLng(Double.parseDouble(list.get(i).get("LATITUDE")), Double.parseDouble(list.get(i).get("LONGITUDE")));
-                        if (list.get(i).get("CAPABILITIES").toLowerCase().contains("ess".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wpa".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wps".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wps".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wep".toLowerCase())) {
-                            mMap.addMarker(new MarkerOptions().position(curLoc).title(temp).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-                        } else {
-                            mMap.addMarker(new MarkerOptions().position(curLoc).title(temp).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        protected Void doInBackground(Void...voids) {
+            while(true)
+            {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(15000);
+                            updateM();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                        double cover = db.estimateCoverage(list.get(i).get("BSSID"));
-                        if (cover > 100) cover = 80;
-                        Log.i("debug coverage: ", "SSID: " + list.get(i).get("SSID") + " radius: " + String.valueOf(cover));
-                        mMap.addCircle(new CircleOptions()
-                                .center(curLoc)
-                                .radius(cover)
-                                .strokeColor(Color.TRANSPARENT)
-                                .fillColor(Color.parseColor("#8014EE91"))
-                                .zIndex(1.0f)
-                        );
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return null;
+                });
             }
         }
     }

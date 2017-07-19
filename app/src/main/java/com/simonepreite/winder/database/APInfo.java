@@ -42,7 +42,7 @@ public class APInfo extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL(SQL_CREATE_AP_TABLE);
-        db.execSQL(SQL_CREATE_MISURATION_TABLE);
+        db.execSQL(SQL_CREATE_MEASURATION_TABLE);
 
     }
 

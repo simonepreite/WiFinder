@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -120,6 +121,9 @@ public class APlistFragment extends Fragment {
                 }
             });
         }
+        /*Intent mapUp = new Intent();
+        mapUp.setAction(Constants.MAPUPDATE);
+        sendBroadcast(APUpdate);*/
     }
 
 }

@@ -33,7 +33,7 @@ public class updateMap extends Thread{
                 sleep(5000);
 
                 ArrayList<HashMap<String,String>> list = db.getAllEntries();
-                this.mMap.clear();
+                mMap.clear();
                 for(int i=0; i<list.size(); i++){
                     String temp = String.valueOf(list.get(i).get("SSID"));
                     LatLng curLoc = new LatLng(Double.parseDouble(list.get(i).get("LATITUDE")), Double.parseDouble(list.get(i).get("LONGITUDE")));

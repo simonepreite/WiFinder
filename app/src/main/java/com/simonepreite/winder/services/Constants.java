@@ -10,6 +10,8 @@ public final class Constants {
             "APUPDATE";
     public static final String LISTUPDATE =
             "LIST";
+    public static final String MAPUPDATE =
+            "MAPUPDATE";
     // Defines the key for the status "extra" in an Intent
     public static final String EXTENDED_DATA_STATUS =
             "com.simonepreite.winder.services.STATUS";

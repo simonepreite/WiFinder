@@ -18,7 +18,7 @@ public class APQuery {
                     CAPABILITIES + " STRING NOT NULL" +
                     ")" ;
 
-    public static String SQL_CREATE_MISURATION_TABLE =
+    public static String SQL_CREATE_MEASURATION_TABLE =
             "CREATE TABLE " + TABLE_MEASURATION + "(" +
                     COLUMN_MAC_ADDRESS + " STRING NOT NULL," +
                     DB + " INT NOT NULL," +

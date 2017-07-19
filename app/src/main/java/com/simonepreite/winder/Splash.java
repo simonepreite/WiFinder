@@ -35,6 +35,7 @@ public class Splash extends AppCompatActivity {
             wifiManager.setWifiEnabled(true);
         }
         if(!enabled) {
+
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);
             while (!enabled) {

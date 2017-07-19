@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.os.Parcelable;
 import android.util.Log;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class APScan extends Service {
     private WifiManager Wmanager;
     private WifiReceiver Wreceiver;
     private wifiScanThread ScanThread;
-    private APInfo db;
+    public APInfo db;
 
     public APScan() {
     }
