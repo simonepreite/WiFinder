@@ -5,9 +5,9 @@
 
     <string name="title_activity_apmaps">Map</string>
 
-    <string name="all">all AP</string>
-    <string name="open">open AP</string>
-    <string name="closed">closed AP</string>
-    <string name="range">around you</string>
+    <string name="all">tutti gli AP</string>
+    <string name="open">AP liberi</string>
+    <string name="closed">AP protetti</string>
+    <string name="range">intorno a te</string>
 
 </resources>

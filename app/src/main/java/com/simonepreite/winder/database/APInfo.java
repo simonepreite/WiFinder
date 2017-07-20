@@ -28,10 +28,6 @@ public class APInfo extends SQLiteOpenHelper {
     }
 
     public static synchronized APInfo getInstance(Context context) {
-
-        // Use the application context, which will ensure that you
-        // don't accidentally leak an Activity's context.
-        // See this article for more information: http://bit.ly/6LRzfx
         if (sInstance == null) {
             sInstance = new APInfo(context);
         }
@@ -185,16 +181,9 @@ public class APInfo extends SQLiteOpenHelper {
         double APLon = APposition.getDouble(APposition.getColumnIndex(LONGITUDE));
         double APLatDistance = APLastDistance.getDouble(APLastDistance.getColumnIndex(LATITUDE));
         double APLonDistance = APLastDistance.getDouble(APLastDistance.getColumnIndex(LONGITUDE));
-        /*double phy1 = Math.toRadians(APLat);
-        double phy2 = Math.toRadians(APLatDistance);
-        double deltaLat = Math.toRadians(APLatDistance - APLat);
-        double deltaLon = Math.toRadians(APLonDistance - APLon);*/
 
-        /*double tmp = Math.sin(deltaLat/2)*Math.sin(deltaLat/2)+
-                     Math.cos(phy1/2)*Math.cos(phy2/2)*
-                     Math.sin(deltaLon/2)*Math.sin(deltaLon/2);
-        coverage = 2 * Math.atan2(Math.sqrt(tmp), Math.sqrt(1-tmp)) * earthRadius;*/
         coverage = calculateDistance(APLat, APLon, APLatDistance, APLonDistance);
+
         return coverage;
     }
 

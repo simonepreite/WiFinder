@@ -17,9 +17,9 @@ public class wifiScanThread extends Thread {
     public void run(){
         for(;;){
             try {
-                sleep(40000);
+                sleep(30000);
                 this.wifi.startScan();
-                Log.i("thread", "scan");
+                //Log.i("thread", "scan");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

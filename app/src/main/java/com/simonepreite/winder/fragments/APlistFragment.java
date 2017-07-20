@@ -75,7 +75,10 @@ public class APlistFragment extends Fragment {
             for (ScanResult ap : apList){
                 if(ap.SSID != "") {
                     HashMap<String,String> APelement = new HashMap<>();
+                    int quality = 2* (ap.level + 100);
+                    if (quality > 100) quality = 100; // formula is approximate
                     APelement.put("RouterName", ap.SSID);
+                    APelement.put("level", String.valueOf(quality+"%"));
                     APelement.put("RouterMac", ap.BSSID);
                     apInfo.add(APelement);
                 }
@@ -84,7 +87,7 @@ public class APlistFragment extends Fragment {
             final ListView APShow = (ListView) getActivity().findViewById(R.id.listView);
             APShow.setAdapter(null);
             final SimpleAdapter adapter =
-                    new SimpleAdapter(getActivity(), apInfo, R.layout.row, new String[] {"RouterName", "RouterMac"}, new int[] {R.id.textViewList, R.id.subItemList});
+                    new SimpleAdapter(getActivity(), apInfo, R.layout.row, new String[] {"RouterName", "level"}, new int[] {R.id.textViewList, R.id.subItemList});
             if(APShow != null) {
                 APShow.setAdapter(adapter);
                 APShow.deferNotifyDataSetChanged();
@@ -106,7 +109,9 @@ public class APlistFragment extends Fragment {
 
                     for (ScanResult ap : apList){
                         if(ap.BSSID == reverse.get("RouterMac")) {
-                            info = ap.SSID + "\n" + ap.BSSID + "\n" + ap.capabilities + "\n";
+                            int quality = 2* (ap.level + 100);
+                            if (quality > 100) quality = 100; // formula is approximate
+                            info = ap.SSID + "\n" + ap.BSSID + "\n" + ap.capabilities + "\n" + quality + "%\n";
                         }
                     }
                     int orientation = getActivity().getResources().getConfiguration().orientation;
@@ -121,9 +126,6 @@ public class APlistFragment extends Fragment {
                 }
             });
         }
-        /*Intent mapUp = new Intent();
-        mapUp.setAction(Constants.MAPUPDATE);
-        sendBroadcast(APUpdate);*/
     }
 
 }

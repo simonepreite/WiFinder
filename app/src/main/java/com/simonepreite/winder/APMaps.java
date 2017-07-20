@@ -1,16 +1,10 @@
 package com.simonepreite.winder;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,21 +18,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.simonepreite.winder.database.APInfo;
-import com.simonepreite.winder.fragments.APlistFragment;
 import com.simonepreite.winder.gps.GPSTracker;
-import com.simonepreite.winder.services.Constants;
-import com.simonepreite.winder.threads.updateMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import static java.lang.Thread.sleep;
 
 public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -56,7 +43,6 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         db = APInfo.getInstance(getApplicationContext());
-
     }
 
     @Override
@@ -102,8 +88,6 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
 
     private GPSTracker getCurPos(){
         GPSTracker gps = new GPSTracker(getApplicationContext());
-        double lat = 0;
-        double lon = 0;
         if(gps.canGetLocation()) {
             gps.getLocation();
         }
@@ -150,8 +134,6 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
 
         mMap.clear();
 
-
-
         for(int i=0; i<list.size(); i++){
             String temp = String.valueOf(list.get(i).get("SSID"));
             LatLng curLoc = new LatLng(Double.parseDouble(list.get(i).get("LATITUDE")), Double.parseDouble(list.get(i).get("LONGITUDE")));
@@ -164,7 +146,7 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
             }
             double cover = db.estimateCoverage(list.get(i).get("BSSID"));
             if(cover > 100) cover = 80;
-            Log.i("debug coverage: ", "SSID: " + list.get(i).get("SSID") + " radius: " + String.valueOf(cover));
+            //Log.i("debug coverage: ", "SSID: " + list.get(i).get("SSID") + " radius: " + String.valueOf(cover));
             mMap.addCircle(new CircleOptions()
                     .center(curLoc)
                     .radius(cover)
@@ -183,11 +165,12 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
             while(true)
             {
                 try {
-                    Thread.sleep(15000);
+                    Thread.sleep(30000);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                                updateM();
+                                Log.i("map thread", "update");
+                            updateM();
                         }
                     });
                 } catch (InterruptedException e) {

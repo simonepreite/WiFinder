@@ -1,58 +1,24 @@
 package com.simonepreite.winder.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
 import com.simonepreite.winder.R;
-import com.simonepreite.winder.database.APInfo;
-import com.simonepreite.winder.gps.GPSTracker;
 
-public class APDetailsFragment extends Fragment /*implements OnMapReadyCallback*/ {
+import java.util.ArrayList;
 
+public class APDetailsFragment extends Fragment  {
 
-    /*private GoogleMap mMap;
-    private APInfo db;*/
-    private Fragment myContext;
-
-
-    /*@Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setMyLocationEnabled(true);
-
-        updateCam(mMap);
-    }
-
-    public void updateCam(GoogleMap mMap){
-        GPSTracker gps = new GPSTracker(getActivity());
-        double lat = 0;
-        double lon = 0;
-        if(gps.canGetLocation()) {
-            gps.getLocation();
-            lat = gps.getLatitude(); // returns latitude
-            lon = gps.getLongitude(); // returns longitude
-        }
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 13));
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(lat, lon))      // Sets the center of the map to location user
-                .zoom(17)                   // Sets the zoom
-                .bearing(90)                // Sets the orientation of the camera to east
-                .tilt(40)                   // Sets the tilt of the camera to 30 degrees
-                .build();                   // Creates a CameraPosition from the builder
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    }*/
 
     ViewGroup root;
     private OnFragmentInteractionListener mListener;
@@ -70,9 +36,6 @@ public class APDetailsFragment extends Fragment /*implements OnMapReadyCallback*
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         root = (ViewGroup) inflater.inflate(R.layout.fragment_apdetails, null, false);
-
-       /* SupportMapFragment mapFragment = ((SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map2));
-        mapFragment.getMapAsync(this);*/
 
         return root;
     }
@@ -95,7 +58,29 @@ public class APDetailsFragment extends Fragment /*implements OnMapReadyCallback*
     }
 
     public void setMessage(String msg){
-        //TextView txt = (TextView)root.findViewById(R.id.detailsText);
-        //txt.setText(msg);
+        ArrayList<String> apInfo = new ArrayList<>();
+
+        final ListView APdetails = (ListView) getActivity().findViewById(R.id.details);
+
+        APdetails.setAdapter(null);
+
+        String info[] = msg.split("\\n");
+        for (String elem : info){
+            apInfo.add(elem);
+        }
+
+        ArrayAdapter det = new ArrayAdapter(getActivity(), R.layout.row2, R.id.row, apInfo);
+
+        if(APdetails != null) {
+            APdetails.setAdapter(det);
+            APdetails.deferNotifyDataSetChanged();
+        }
+
+        APdetails.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+            }
+        });
     }
 }

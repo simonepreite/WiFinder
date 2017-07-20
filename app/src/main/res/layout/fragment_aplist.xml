@@ -23,7 +23,7 @@
         app:layout_anchor="@id/detailsFragment"
         app:layout_anchorGravity="bottom|right|end" />
 
-    <android.support.design.widget.FloatingActionButton
+    <!--<android.support.design.widget.FloatingActionButton
         android:id="@+id/fabDB2"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
@@ -31,6 +31,6 @@
         android:layout_margin="16dp"
         app:layout_anchor="@id/listFragment"
         app:layout_anchorGravity="top|right"
-        app:srcCompat="@android:drawable/ic_menu_edit" />
+        app:srcCompat="@android:drawable/ic_menu_edit" />-->
 
 </FrameLayout>

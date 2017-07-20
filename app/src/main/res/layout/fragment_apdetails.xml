@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -5,19 +7,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.simonepreite.winder.fragments.APDetailsFragment">
 
-    <!--<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        class="com.simonepreite.winder.fragments.APDetailsFragment"
-        android:id="@+id/map2"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <ListView
+        android:id="@+id/details"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />-->
-    <TextView
-        android:id="@+id/detailsText"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
+        android:layout_height="match_parent">
+    </ListView>
 
 
 </FrameLayout>

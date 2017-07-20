@@ -1,21 +1,16 @@
 package com.simonepreite.winder;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 
-import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.simonepreite.winder.database.AndroidDatabaseManager;
-import com.simonepreite.winder.services.APScan;
 
 public class APList extends AppCompatActivity {
 
@@ -40,7 +35,7 @@ public class APList extends AppCompatActivity {
                 }
             });
 
-            FloatingActionButton dbfab2 =(FloatingActionButton) findViewById(R.id.fabDB2);
+            /*FloatingActionButton dbfab2 =(FloatingActionButton) findViewById(R.id.fabDB2);
 
             dbfab2.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -48,7 +43,7 @@ public class APList extends AppCompatActivity {
                     Intent dbmanager = new Intent(APList.this ,AndroidDatabaseManager.class);
                     startActivity(dbmanager);
                 }
-            });
+            });*/
 
         }else{
             setContentView(R.layout.activity_aplist);
@@ -62,7 +57,9 @@ public class APList extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
-            FloatingActionButton dbfab = (FloatingActionButton) findViewById(R.id.fabDB);
+
+
+            /*FloatingActionButton dbfab = (FloatingActionButton) findViewById(R.id.fabDB);
 
             dbfab.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -70,7 +67,7 @@ public class APList extends AppCompatActivity {
                     Intent dbmanager = new Intent(APList.this ,AndroidDatabaseManager.class);
                     startActivity(dbmanager);
                 }
-            });
+            });*/
 
         }
 
