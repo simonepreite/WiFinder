@@ -53,10 +53,9 @@ public class APInfo extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public ArrayList<HashMap<String,String>> getAllEntries(){
+    private ArrayList<HashMap<String,String>> fillList(Cursor c){
         ArrayList<HashMap<String,String>> list = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c= db.rawQuery(GET_ALL_ENTRIES, null);
+
         c.moveToFirst();
         while (c.isAfterLast() == false) {
             HashMap<String,String> temp = new HashMap<>();
@@ -73,6 +72,69 @@ public class APInfo extends SQLiteOpenHelper {
             }
             c2.close();
             list.add(temp);
+            c.moveToNext();
+        }
+        c.close();
+        return list;
+    }
+
+    public ArrayList<HashMap<String,String>> getAllEntries(){
+        ArrayList<HashMap<String,String>> list;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c= db.rawQuery(GET_ALL_ENTRIES, null);
+        list = fillList(c);
+        db.close();
+        return list;
+    }
+
+    public ArrayList<HashMap<String,String>> getOnlyClosed(){
+        ArrayList<HashMap<String,String>> list;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c= db.rawQuery(GET_ONLY_CLOSED, null);
+        list = fillList(c);
+        db.close();
+        return list;
+    }
+
+    public ArrayList<HashMap<String,String>> getOnlyOpen(){
+        ArrayList<HashMap<String,String>> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c= db.rawQuery(GET_ONLY_OPEN, null);
+        c.moveToFirst();
+        list = fillList(c);
+        db.close();
+        return list;
+    }
+
+    public ArrayList<HashMap<String,String>> getAroundMe(Double lat, Double lon){
+        ArrayList<HashMap<String,String>> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c= db.rawQuery(GET_ALL_ENTRIES, null);
+        c.moveToFirst();
+        Double APLat = 0.0;
+        Double APLon = 0.0;
+
+        while (c.isAfterLast() == false) {
+            HashMap<String,String> temp = new HashMap<>();
+            temp.put("BSSID", c.getString(c.getColumnIndex(COLUMN_MAC_ADDRESS)));
+            temp.put("SSID", c.getString(c.getColumnIndex(COLUMN_SSID)));
+            temp.put("CAPABILITIES", c.getString(c.getColumnIndex(CAPABILITIES)));
+            Cursor c2 = getAPposition(c.getString(c.getColumnIndex(COLUMN_MAC_ADDRESS)));
+            c2.moveToFirst();
+            if (c2.moveToFirst()) {
+                do {
+                    temp.put("LATITUDE", c2.getString(c2.getColumnIndex(LATITUDE)));
+                    temp.put("LONGITUDE", c2.getString(c2.getColumnIndex(LONGITUDE)));
+                    APLat = c2.getDouble(c2.getColumnIndex(LATITUDE));
+                    APLon = c2.getDouble(c2.getColumnIndex(LONGITUDE));
+                } while (c2.moveToNext());
+            }
+            c2.close();
+            if (calculateDistance(lat, lon, APLat, APLon) < 30) {
+                list.add(temp);
+                APLat = 0.0;
+                APLon = 0.0;
+            }
             c.moveToNext();
         }
         c.close();
@@ -118,20 +180,36 @@ public class APInfo extends SQLiteOpenHelper {
     public double estimateCoverage(String BSSID){
         Cursor APposition = getAPposition(BSSID);
         Cursor APLastDistance = getAPcoverage(BSSID);
-        double earthRadius = 6371000;
         double coverage;
         double APLat = APposition.getDouble(APposition.getColumnIndex(LATITUDE));
         double APLon = APposition.getDouble(APposition.getColumnIndex(LONGITUDE));
         double APLatDistance = APLastDistance.getDouble(APLastDistance.getColumnIndex(LATITUDE));
         double APLonDistance = APLastDistance.getDouble(APLastDistance.getColumnIndex(LONGITUDE));
-        double phy1 = Math.toRadians(APLat);
+        /*double phy1 = Math.toRadians(APLat);
         double phy2 = Math.toRadians(APLatDistance);
         double deltaLat = Math.toRadians(APLatDistance - APLat);
-        double deltaLon = Math.toRadians(APLonDistance - APLon);
+        double deltaLon = Math.toRadians(APLonDistance - APLon);*/
 
-        double tmp = Math.sin(deltaLat/2)*Math.sin(deltaLat/2)+
+        /*double tmp = Math.sin(deltaLat/2)*Math.sin(deltaLat/2)+
                      Math.cos(phy1/2)*Math.cos(phy2/2)*
                      Math.sin(deltaLon/2)*Math.sin(deltaLon/2);
+        coverage = 2 * Math.atan2(Math.sqrt(tmp), Math.sqrt(1-tmp)) * earthRadius;*/
+        coverage = calculateDistance(APLat, APLon, APLatDistance, APLonDistance);
+        return coverage;
+    }
+
+    public double calculateDistance(double srcLat, double srcLon, double dstLat, double dstLon){
+        double earthRadius = 6371000;
+        double coverage;
+
+        double phy1 = Math.toRadians(srcLat);
+        double phy2 = Math.toRadians(dstLat);
+        double deltaLat = Math.toRadians(dstLat - srcLat);
+        double deltaLon = Math.toRadians(dstLon - srcLon);
+
+        double tmp = Math.sin(deltaLat/2)*Math.sin(deltaLat/2)+
+                Math.cos(phy1/2)*Math.cos(phy2/2)*
+                        Math.sin(deltaLon/2)*Math.sin(deltaLon/2);
         coverage = 2 * Math.atan2(Math.sqrt(tmp), Math.sqrt(1-tmp)) * earthRadius;
         return coverage;
     }

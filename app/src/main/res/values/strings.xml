@@ -5,4 +5,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment"></string>
     <string name="title_activity_apmaps">Map</string>
+
+    <string name="all">all AP</string>
+    <string name="open">open AP</string>
+    <string name="closed">closed AP</string>
+    <string name="range">around you</string>
+
+
 </resources>

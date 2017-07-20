@@ -1,15 +1,18 @@
 package com.simonepreite.winder.services;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.os.Parcelable;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 
@@ -56,7 +59,6 @@ public class APScan extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -67,21 +69,25 @@ public class APScan extends Service {
             GPSTracker gps = new GPSTracker(context);
             db = APInfo.getInstance(getApplicationContext());
             final List<ScanResult> apList = Wmanager.getScanResults();
-            for (int i = 0; i < apList.size(); i++) {
-                double lat = 0;
-                double lon = 0;
-                if(gps.canGetLocation()) {
-                    gps.getLocation();
-                    lat = gps.getLatitude(); // returns latitude
-                    lon = gps.getLongitude(); // returns longitude
-                }
-                long check = db.insertScanRes(apList.get(i).BSSID, apList.get(i).level, apList.get(i).capabilities, apList.get(i).SSID, lat, lon);
-            }
+            if (ActivityCompat.checkSelfPermission(getApplication(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplication(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            Intent APUpdate = new Intent();
-            APUpdate.setAction(Constants.LISTUPDATE);
-            APUpdate.putParcelableArrayListExtra("APlist", (ArrayList<? extends Parcelable>) apList);
-            sendBroadcast(APUpdate);
+                for (int i = 0; i < apList.size(); i++) {
+                    double lat = 0;
+                    double lon = 0;
+                    if (gps.canGetLocation()) {
+                        gps.getLocation();
+                        lat = gps.getLatitude(); // returns latitude
+                        lon = gps.getLongitude(); // returns longitude
+                    }
+                    if(lat != 0.0 && lon != 0.0) { //patch purtroppo il mio gps non è sempre funzionante al 100%, cosa faccio se sono al punto (0, 0) del mondo?
+                        long check = db.insertScanRes(apList.get(i).BSSID, apList.get(i).level, apList.get(i).capabilities, apList.get(i).SSID, lat, lon);
+                    }
+                }
+                Intent APUpdate = new Intent();
+                APUpdate.setAction(Constants.LISTUPDATE);
+                APUpdate.putParcelableArrayListExtra("APlist", (ArrayList<? extends Parcelable>) apList);
+                sendBroadcast(APUpdate);
+            }
         }
 
     }
