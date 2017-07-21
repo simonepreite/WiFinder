@@ -203,7 +203,7 @@ public class APInfo extends SQLiteOpenHelper {
         return coverage;
     }
 
-    private Cursor getAPposition(String BSSID){
+    public Cursor getAPposition(String BSSID){
         SQLiteDatabase db = this.getReadableDatabase();
         String[] arg = {BSSID};
         Cursor c = db.rawQuery(GET_AP_POSITION, arg);

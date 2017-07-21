@@ -1,11 +1,16 @@
 package com.simonepreite.winder;
 
 import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +25,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.simonepreite.winder.database.APInfo;
 import com.simonepreite.winder.gps.GPSTracker;
@@ -27,7 +33,9 @@ import com.simonepreite.winder.gps.GPSTracker;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
+import static com.simonepreite.winder.database.APAuxdb.APBaseColums.*;
+
+public class APMaps extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     public GoogleMap mMap;
     private APInfo db;
@@ -54,7 +62,7 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
             new updateThread().execute();
             updateCam(mMap);
         }
-
+        mMap.setOnInfoWindowClickListener(this);
     }
 
     @Override
@@ -138,10 +146,17 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
             String temp = String.valueOf(list.get(i).get("SSID"));
             LatLng curLoc = new LatLng(Double.parseDouble(list.get(i).get("LATITUDE")), Double.parseDouble(list.get(i).get("LONGITUDE")));
             if(list.get(i).get("CAPABILITIES").toLowerCase().contains("ess".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wpa".toLowerCase()) || list.get(i).get("CAPABILITIES").toLowerCase().contains("wps".toLowerCase()) ||  list.get(i).get("CAPABILITIES").toLowerCase().contains("wep".toLowerCase())) {
-                mMap.addMarker(new MarkerOptions().position(curLoc).title(temp).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                mMap.addMarker(new MarkerOptions()
+                        .position(curLoc)
+                        .title(temp)
+                        .snippet(list.get(i).get("BSSID"))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
                 COLOR = protectedCirleColor;
             }else{
-                mMap.addMarker(new MarkerOptions().position(curLoc).title(temp).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                mMap.addMarker(new MarkerOptions()
+                        .position(curLoc).title(temp)
+                        .snippet(list.get(i).get("BSSID"))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                 COLOR = openCircleColor;
             }
             double cover = db.estimateCoverage(list.get(i).get("BSSID"));
@@ -155,6 +170,11 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
                     .zIndex(1.0f)
                     );
         }
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        buildAlertMessageShowDetails(marker.getTitle(), marker.getSnippet());
     }
 
     public class updateThread  extends AsyncTask<Void, Void, Void>{
@@ -178,5 +198,30 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback {
                 }
             }
         }
+    }
+
+    private void buildAlertMessageShowDetails(String SSID, String BSSID) {
+        Cursor c = db.getAPposition(BSSID);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String Lat = "";
+        String Lon = "";
+        String level = "";
+        String cap = "";
+        int quality = 0;
+        Lat = c.getString(c.getColumnIndex(LATITUDE));
+        Lon = c.getString(c.getColumnIndex(LONGITUDE));
+        level = c.getString(c.getColumnIndex(DB));
+        quality = 2* (Integer.parseInt(level) + 100);
+        if (quality > 100) quality = 100;
+        c.close();
+        builder.setMessage("SSID: " + SSID + "\n\nBSSID: " + BSSID + "\n\nLEVEL: " + String.valueOf(quality) + "%, " + level + " db" + "\n\nLAT: " + Lat + "\n\nLON: " + Lon)
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 }

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""
-        android:padding="10dp"
+        android:padding="5dp"
         android:textSize="22sp"
         />
 
@@ -20,9 +20,10 @@
         android:layout_height="wrap_content"
         android:text=""
         android:layout_below="@id/textViewList"
-        android:padding="10dp"
+        android:padding="5dp"
         android:textSize="18sp"
         android:maxLines="1"
+        android:textColor="@android:color/holo_red_dark"
         />
 
 </LinearLayout>

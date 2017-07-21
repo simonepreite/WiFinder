@@ -5,5 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="fabSyncColor">#ff9d41</color>
     <color name="backgroundList">#efc3d1e7</color>
+    <color name="backgroundDetails">#46d4b078</color>
     <color name="backgroundSplash">#efc3d1e7</color>
+    <color name="splashText">#efffffff</color>
 </resources>
