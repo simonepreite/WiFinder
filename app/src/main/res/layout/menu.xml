@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group> <!-- visualization methods -->
+
+        <item
+            android:id="@+id/show_range"
+            android:title="@string/range"/>
         <item
             android:id="@+id/show_all"
             android:title ="@string/all"/>
@@ -11,9 +15,6 @@
         <item
             android:id="@+id/show_closed"
             android:title="@string/closed"/>
-        <item
-            android:id="@+id/show_range"
-            android:title="@string/range"/>
     </group>
 
 </menu>

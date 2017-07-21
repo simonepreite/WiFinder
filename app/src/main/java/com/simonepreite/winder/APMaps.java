@@ -40,7 +40,7 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback, Goo
 
     public GoogleMap mMap;
     private APInfo db;
-    private int mode = 0;
+    private int mode = 2;
     private String openCircleColor = "#8014EE91";
     private String protectedCirleColor = "#40fa397d";
 
@@ -89,7 +89,7 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback, Goo
                 mode = 2;
                 break;
             default:
-                mode = 0;
+                mode = 2;
         }
         updateM();
         return true;
@@ -120,7 +120,9 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback, Goo
     public void updateM(){
         ArrayList<HashMap<String,String>> list;
         String COLOR;
-
+        GPSTracker gps;
+        Double lat;
+        Double lon;
         switch (mode) {
             case 0:
                 list = db.getAllEntries();
@@ -132,13 +134,16 @@ public class APMaps extends AppCompatActivity implements OnMapReadyCallback, Goo
                 list = db.getOnlyClosed();
                 break;
             case 2:
-                GPSTracker gps = getCurPos();
-                Double lat = gps.getLatitude(); // returns latitude
-                Double lon = gps.getLongitude(); // returns longitude
+                gps = getCurPos();
+                lat = gps.getLatitude(); // returns latitude
+                lon = gps.getLongitude(); // returns longitude
                 list = db.getAroundMe(lat , lon);
                 break;
             default:
-                list = db.getAllEntries();
+                gps = getCurPos();
+                lat = gps.getLatitude(); // returns latitude
+                lon = gps.getLongitude(); // returns longitude
+                list = db.getAroundMe(lat , lon);
         }
 
         mMap.clear();
